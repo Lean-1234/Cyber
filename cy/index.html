@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERPUNK RPG - SESSION HUD & GM CONTROL</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fuentes Sci-Fi / Cyberpunk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --neon-cyan: #00f3ff;
+      --neon-magenta: #ff0055;
+      --neon-yellow: #fcee0a;
+      --cyber-bg: #090a10;
+      --card-bg: rgba(14, 18, 28, 0.9);
+    }
+
+    body {
+      background-color: var(--cyber-bg);
+      font-family: 'Rajdhani', sans-serif;
+      color: #e2e8f0;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.04) 0%, transparent 70%),
+        linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.02) 3px, rgba(0, 243, 255, 0.02) 3px);
+      min-height: 100vh;
+    }
+
+    .font-title { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+
+    .cyber-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.08);
+    }
+
+    .glow-cyan { text-shadow: 0 0 8px var(--neon-cyan); }
+
+    .cyber-input {
+      background: rgba(5, 8, 15, 0.9);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .cyber-input:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    }
+
+    .cyber-btn-cyan {
+      background: linear-gradient(135deg, var(--neon-cyan) 0%, #0088cc 100%);
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-cyan:hover {
+      background: var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+    }
+
+    .cyber-btn-magenta {
+      background: linear-gradient(135deg, var(--neon-magenta) 0%, #a00037 100%);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-magenta:hover {
+      background: var(--neon-yellow);
+      color: #000;
+      box-shadow: 0 0 15px var(--neon-yellow);
+    }
+
+    .cyber-btn-outline {
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.05);
+      font-family: 'Orbitron', sans-serif;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-outline:hover {
+      background: var(--neon-cyan);
+      color: #000;
+      box-shadow: 0 0 12px var(--neon-cyan);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-6 min-h-screen flex flex-col justify-between">
+
+  <!-- CABECERA DE NAVEGACIÓN SUPERIOR -->
+  <header class="flex flex-col md:flex-row items-center justify-between border-b border-cyan-500/30 pb-4 mb-6 gap-4">
+    <div class="flex items-center space-x-3">
+      <div class="h-4 w-4 bg-cyan-400 animate-ping"></div>
+      <div>
+        <h1 class="text-2xl font-black font-title tracking-widest text-white glow-cyan">
+          NETRUNNER<span class="text-cyan-400">.</span>HUD
+        </h1>
+        <p class="font-mono-tech text-xs text-cyan-400/70 tracking-wider">// REALTIME MULTI-NODE SYSTEM</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <a href="create-character.html" class="cyber-btn-outline px-4 py-2 text-xs font-bold uppercase tracking-wider inline-block">
+        [ + Crear Personaje ]
+      </a>
+    </div>
+  </header>
+
+  <!-- MODAL DE INICIO DE SESIÓN -->
+  <div class="max-w-md mx-auto my-auto w-full cyber-card p-6">
+    <h2 class="text-xl font-bold font-title text-center text-white glow-cyan mb-2">CONEXIÓN A SESIÓN RPG</h2>
+    <p class="font-mono-tech text-xs text-gray-400 text-center mb-6">Selecciona tu personaje o crea una sala como Game Master.</p>
+    
+    <div class="space-y-4">
+      <div>
+        <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; CÓDIGO DE LA SESIÓN</label>
+        <input type="text" placeholder="ej: ABCDEFGH" class="cyber-input w-full px-4 py-2 text-sm uppercase">
+      </div>
+
+      <div>
+        <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; SELECCIONAR PERSONAJE</label>
+        <select class="cyber-input w-full px-4 py-2 text-sm bg-slate-950">
+          <option value="" disabled selected>-- Elige un personaje --</option>
+          <option value="char_1">V_Solitary (Solos / Nivel 4)</option>
+          <option value="char_2">Chrome_Netrunner (Netrunner / Nivel 3)</option>
+        </select>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN: CONEXIÓN DIRECTA -->
+      <div class="pt-2 grid grid-cols-2 gap-3">
+        <a href="index.html" class="cyber-btn-cyan py-3 text-xs uppercase tracking-wider text-center inline-block">
+          Unirme como Jugador
+        </a>
+        <!-- BOTÓN GAME MASTER CONECTADO DIRECTO A GM-DASHBOARD.HTML -->
+        <a href="gm-dashboard.html" class="cyber-btn-magenta py-3 text-xs uppercase tracking-wider text-center inline-block">
+          Crear Sala (Game Master)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-8 border-t border-cyan-500/20 pt-4 text-center text-xs font-mono-tech text-gray-500">
+    CYBERPUNK RPG SYSTEM // POWERED BY PYTHON & HTML
+  </footer>
+
+</body>
+</html>

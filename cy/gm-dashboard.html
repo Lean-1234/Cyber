@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERPUNK RPG - GAME MASTER DASHBOARD</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fuentes Sci-Fi / Cyberpunk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --neon-cyan: #00f3ff;
+      --neon-magenta: #ff0055;
+      --neon-yellow: #fcee0a;
+      --cyber-bg: #090a10;
+      --card-bg: rgba(22, 10, 20, 0.9);
+    }
+
+    body {
+      background-color: var(--cyber-bg);
+      font-family: 'Rajdhani', sans-serif;
+      color: #e2e8f0;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 0, 85, 0.05) 0%, transparent 70%),
+        linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 85, 0.02) 3px, rgba(255, 0, 85, 0.02) 3px);
+      min-height: 100vh;
+    }
+
+    .font-title { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+
+    .cyber-card-gm {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+      box-shadow: 0 0 20px rgba(255, 0, 85, 0.1);
+    }
+
+    .glow-magenta { text-shadow: 0 0 10px var(--neon-magenta); }
+    .glow-yellow { text-shadow: 0 0 8px var(--neon-yellow); }
+
+    .cyber-input {
+      background: rgba(10, 5, 12, 0.9);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      color: var(--neon-yellow);
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .cyber-btn-magenta {
+      background: linear-gradient(135deg, var(--neon-magenta) 0%, #a00037 100%);
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-magenta:hover {
+      background: var(--neon-yellow);
+      color: #000;
+      box-shadow: 0 0 15px var(--neon-yellow);
+    }
+
+    .cyber-btn-outline-gm {
+      border: 1px solid var(--neon-magenta);
+      color: var(--neon-magenta);
+      background: rgba(255, 0, 85, 0.05);
+      font-family: 'Orbitron', sans-serif;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-outline-gm:hover {
+      background: var(--neon-magenta);
+      color: #fff;
+      box-shadow: 0 0 12px var(--neon-magenta);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-6 min-h-screen flex flex-col justify-between">
+
+  <!-- CABECERA GM CON CÓDIGO DE 4 CARACTERES -->
+  <header class="flex flex-col md:flex-row items-center justify-between border-b border-pink-500/30 pb-4 mb-6 gap-4">
+    <div class="flex items-center space-x-3">
+      <div class="h-4 w-4 bg-pink-500 animate-ping"></div>
+      <div>
+        <h1 class="text-2xl font-black font-title tracking-widest text-white glow-magenta">
+          GAME MASTER<span class="text-pink-500">.</span>CONTROL
+        </h1>
+        <p class="font-mono-tech text-xs text-pink-400/70 tracking-wider">// PANEL DE ADMINISTRACIÓN DE SESIÓN</p>
+      </div>
+    </div>
+
+    <!-- CÓDIGO GENERADO DE 4 CARACTERES (ALFANUMÉRICO) -->
+    <div class="flex items-center space-x-4 bg-slate-950 px-5 py-3 border border-pink-500/40">
+      <div class="text-right font-mono-tech">
+        <span class="text-gray-400 text-xs block">CÓDIGO DE SALA:</span>
+        <span id="room-code-display" class="text-yellow-400 font-black font-title text-2xl tracking-widest glow-yellow">----</span>
+      </div>
+      <a href="index.html" class="font-mono-tech text-xs text-gray-500 hover:text-pink-400 ml-4 border-l border-gray-800 pl-4">
+        [ Cerrar Sala ]
+      </a>
+    </div>
+  </header>
+
+  <!-- CONTENIDO GAME MASTER -->
+  <main class="max-w-6xl mx-auto w-full space-y-6">
+    
+    <!-- CONTROL DE SALUD / JUGADORES -->
+    <div class="cyber-card-gm p-6">
+      <div class="flex justify-between items-center border-b border-pink-500/30 pb-3 mb-4">
+        <h2 class="text-lg font-bold font-title text-pink-500">// FICHAS DE JUGADORES EN LÍNEA</h2>
+        <span class="font-mono-tech text-xs text-gray-400">JUGADORES CONECTADOS: 2</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-950/80 p-4 border border-pink-500/20 flex justify-between items-center">
+          <div>
+            <h3 class="font-title text-sm text-cyan-400">V_Solitary</h3>
+            <p class="font-mono-tech text-xs text-gray-400">CLASE: SOLO | HP: 85/100</p>
+          </div>
+          <div class="flex space-x-2">
+            <button class="cyber-btn-outline-gm text-xs px-2 py-1">-10 HP</button>
+            <button class="cyber-btn-outline-gm text-xs px-2 py-1">+10 HP</button>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/80 p-4 border border-pink-500/20 flex justify-between items-center">
+          <div>
+            <h3 class="font-title text-sm text-pink-400">Chrome_Runner</h3>
+            <p class="font-mono-tech text-xs text-gray-400">CLASE: NETRUNNER | HP: 60/60</p>
+          </div>
+          <div class="flex space-x-2">
+            <button class="cyber-btn-outline-gm text-xs px-2 py-1">-10 HP</button>
+            <button class="cyber-btn-outline-gm text-xs px-2 py-1">+10 HP</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONSOLA DE ALERTAS -->
+    <div class="cyber-card-gm p-6">
+      <h2 class="text-lg font-bold font-title text-yellow-400 mb-4 border-b border-yellow-500/30 pb-2">// EMITIR MENSAJE O ALERTA GENERAL</h2>
+      <form action="gm-dashboard.html" class="flex gap-4">
+        <input type="text" placeholder="Escribe un aviso para los jugadores..." class="cyber-input w-full px-4 py-3 text-sm">
+        <button type="submit" class="cyber-btn-magenta px-6 py-3 text-xs uppercase tracking-wider whitespace-nowrap">
+          Enviar Alerta
+        </button>
+      </form>
+    </div>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="mt-8 border-t border-pink-500/20 pt-4 text-center text-xs font-mono-tech text-gray-500">
+    CYBERPUNK RPG SYSTEM // MASTER CONTROL INTERFACE
+  </footer>
+
+  <script>
+    // Generador de 4 caracteres alfanuméricos (Letras y Números)
+    function generarCodigoCuatroCaracteres() {
+      const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let codigo = '';
+      for (let i = 0; i < 4; i++) {
+        codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+      }
+      return codigo;
+    }
+
+    window.onload = function() {
+      document.getElementById('room-code-display').innerText = generarCodigoCuatroCaracteres();
+    };
+  </script>
+
+</body>
+</html>

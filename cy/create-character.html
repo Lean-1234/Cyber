@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERPUNK RPG - CHARACTER CREATION</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Fuentes Sci-Fi / Cyberpunk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --neon-cyan: #00f3ff;
+      --neon-magenta: #ff0055;
+      --neon-yellow: #fcee0a;
+      --cyber-bg: #090a10;
+      --card-bg: rgba(14, 18, 28, 0.9);
+    }
+
+    body {
+      background-color: var(--cyber-bg);
+      font-family: 'Rajdhani', sans-serif;
+      color: #e2e8f0;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.04) 0%, transparent 70%),
+        linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.02) 3px, rgba(0, 243, 255, 0.02) 3px);
+      min-height: 100vh;
+    }
+
+    .font-title { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+
+    .cyber-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.08);
+    }
+
+    .glow-cyan { text-shadow: 0 0 8px var(--neon-cyan); }
+    .glow-yellow { text-shadow: 0 0 8px var(--neon-yellow); }
+
+    .cyber-input {
+      background: rgba(5, 8, 15, 0.9);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      color: var(--neon-cyan);
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .cyber-input:focus {
+      outline: none;
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+    }
+
+    .cyber-btn-cyan {
+      background: linear-gradient(135deg, var(--neon-cyan) 0%, #0088cc 100%);
+      color: #000;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+      transition: all 0.2s;
+    }
+    .cyber-btn-cyan:hover {
+      background: var(--neon-yellow);
+      box-shadow: 0 0 15px var(--neon-yellow);
+    }
+
+    .stat-btn {
+      background: rgba(0, 243, 255, 0.1);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .stat-btn:hover:not(:disabled) {
+      background: var(--neon-cyan);
+      color: #000;
+    }
+    .stat-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: #555;
+    }
+
+    .role-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .role-card.selected {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.1);
+      box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen flex flex-col justify-between">
+
+  <!-- CABECERA -->
+  <header class="flex items-center justify-between border-b border-cyan-500/30 pb-4 mb-6">
+    <div class="flex items-center space-x-3">
+      <div class="h-4 w-4 bg-cyan-400 animate-ping"></div>
+      <div>
+        <h1 class="text-2xl font-black font-title tracking-widest text-white glow-cyan">
+          CHARACTER<span class="text-cyan-400">.</span>FORGE
+        </h1>
+        <p class="font-mono-tech text-xs text-cyan-400/70 tracking-wider">// CREACIÓN DE IDENTIDAD NEURONAL</p>
+      </div>
+    </div>
+    <a href="index.html" class="font-mono-tech text-xs text-gray-400 hover:text-cyan-400 transition">
+      [ &lt; Cancelar y Volver ]
+    </a>
+  </header>
+
+  <!-- FORMULARIO DE CREACIÓN -->
+  <main class="max-w-4xl mx-auto w-full space-y-6">
+    <form id="char-form" onsubmit="guardarPersonaje(event)">
+      
+      <!-- SECCIÓN 1: DATOS BÁSICOS -->
+      <div class="cyber-card p-6 mb-6">
+        <h2 class="text-lg font-bold font-title text-cyan-400 mb-4 border-b border-cyan-500/30 pb-2">
+          1. DATOS DE IDENTIDAD
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-mono-tech text-xs text-gray-400 mb-1">&gt; ALIAS / NOMBRE DEL PERSONAJE</label>
+            <input type="text" id="char-alias" placeholder="ej: V_Solitary" required class="cyber-input w-full px-4 py-2 text-sm">
+          </div>
+          <div>
+            <label class="block font-mono-tech text-xs text-gray-400 mb-1">&gt; ORIGEN DE CALLE (BACKGROUND)</label>
+            <select id="char-background" class="cyber-input w-full px-4 py-2 text-sm bg-slate-950">
+              <option value="Nómada">Nómada (Superviviente de las afueras)</option>
+              <option value="Chico de Calle">Chico de Calle (Conoce los bajos fondos)</option>
+              <option value="Corporativo">Corporativo (Ex-empleado de mega-corporación)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: SELECCIÓN DE CLASE / ROL -->
+      <div class="cyber-card p-6 mb-6">
+        <h2 class="text-lg font-bold font-title text-cyan-400 mb-4 border-b border-cyan-500/30 pb-2">
+          2. SELECCIONAR CLASE (ROLE CLASS)
+        </h2>
+        <input type="hidden" id="selected-role" value="Solo">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Clase 1: Solo -->
+          <div class="role-card selected p-4 rounded-none" onclick="seleccionarRol(this, 'Solo')">
+            <span class="font-title text-sm text-cyan-400 font-bold block mb-1">SOLO</span>
+            <p class="font-mono-tech text-xs text-gray-400">Especialista en combate pesado y manejo de armas.</p>
+          </div>
+          <!-- Clase 2: Netrunner -->
+          <div class="role-card p-4 rounded-none" onclick="seleccionarRol(this, 'Netrunner')">
+            <span class="font-title text-sm text-pink-500 font-bold block mb-1">NETRUNNER</span>
+            <p class="font-mono-tech text-xs text-gray-400">Hacker experto en infiltración de redes y programas cyber.</p>
+          </div>
+          <!-- Clase 3: Techie -->
+          <div class="role-card p-4 rounded-none" onclick="seleccionarRol(this, 'Techie')">
+            <span class="font-title text-sm text-yellow-400 font-bold block mb-1">TECHIE</span>
+            <p class="font-mono-tech text-xs text-gray-400">Ingeniero de ciberware, armas y modificación de hardware.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: ATRIBUTOS (SISTEMA POINT BUY) -->
+      <div class="cyber-card p-6 mb-6">
+        <div class="flex justify-between items-center border-b border-cyan-500/30 pb-2 mb-4">
+          <h2 class="text-lg font-bold font-title text-cyan-400">
+            3. ATRIBUTOS NEURONALES
+          </h2>
+          <div class="font-mono-tech text-xs bg-slate-900 px-3 py-1 border border-cyan-500/40">
+            PUNTOS DISPONIBLES: <span id="points-left" class="text-yellow-400 font-bold text-sm">10</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Stat: REF -->
+          <div class="flex items-center justify-between bg-slate-900/60 p-3 border border-gray-800">
+            <div>
+              <span class="font-mono-tech text-sm font-bold text-cyan-400 block">REFLEJOS (REF)</span>
+              <span class="font-mono-tech text-xs text-gray-500">Esquiva y puntería</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <button type="button" class="stat-btn" onclick="modificarStat('ref', -1)">-</button>
+              <span id="val-ref" class="font-title text-lg font-bold w-6 text-center">8</span>
+              <button type="button" class="stat-btn" onclick="modificarStat('ref', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Stat: INT -->
+          <div class="flex items-center justify-between bg-slate-900/60 p-3 border border-gray-800">
+            <div>
+              <span class="font-mono-tech text-sm font-bold text-cyan-400 block">INTELIGENCIA (INT)</span>
+              <span class="font-mono-tech text-xs text-gray-500">Hacking y memoria</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <button type="button" class="stat-btn" onclick="modificarStat('int', -1)">-</button>
+              <span id="val-int" class="font-title text-lg font-bold w-6 text-center">8</span>
+              <button type="button" class="stat-btn" onclick="modificarStat('int', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Stat: TEC -->
+          <div class="flex items-center justify-between bg-slate-900/60 p-3 border border-gray-800">
+            <div>
+              <span class="font-mono-tech text-sm font-bold text-cyan-400 block">TÉCNICA (TEC)</span>
+              <span class="font-mono-tech text-xs text-gray-500">Reparación y utilidades</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <button type="button" class="stat-btn" onclick="modificarStat('tec', -1)">-</button>
+              <span id="val-tec" class="font-title text-lg font-bold w-6 text-center">8</span>
+              <button type="button" class="stat-btn" onclick="modificarStat('tec', 1)">+</button>
+            </div>
+          </div>
+
+          <!-- Stat: COOL -->
+          <div class="flex items-center justify-between bg-slate-900/60 p-3 border border-gray-800">
+            <div>
+              <span class="font-mono-tech text-sm font-bold text-cyan-400 block">SANGRE FRÍA (COOL)</span>
+              <span class="font-mono-tech text-xs text-gray-500">Resistencia al estrés</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <button type="button" class="stat-btn" onclick="modificarStat('cool', -1)">-</button>
+              <span id="val-cool" class="font-title text-lg font-bold w-6 text-center">8</span>
+              <button type="button" class="stat-btn" onclick="modificarStat('cool', 1)">+</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTÓN FINALIZAR -->
+      <button type="submit" class="cyber-btn-cyan w-full py-4 text-center tracking-widest text-sm uppercase">
+        [ Finalizar y Registrar Personaje ]
+      </button>
+
+    </form>
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="mt-8 border-t border-cyan-500/20 pt-4 text-center text-xs font-mono-tech text-gray-500">
+    CYBERPUNK RPG SYSTEM // MOULDO DE CREACIÓN V1.0
+  </footer>
+
+  <script>
+    // Estado de Puntos y Stats
+    let puntosDisponibles = 10;
+    const stats = { ref: 8, int: 8, tec: 8, cool: 8 };
+    const STAT_MIN = 8;
+    const STAT_MAX = 14;
+
+    function seleccionarRol(element, rol) {
+      document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+      document.getElementById('selected-role').value = rol;
+    }
+
+    function modificarStat(statKey, cambio) {
+      const valorActual = stats[statKey];
+
+      if (cambio > 0 && puntosDisponibles > 0 && valorActual < STAT_MAX) {
+        stats[statKey]++;
+        puntosDisponibles--;
+      } else if (cambio < 0 && valorActual > STAT_MIN) {
+        stats[statKey]--;
+        puntosDisponibles++;
+      }
+
+      // Actualizar pantalla
+      document.getElementById(`val-${statKey}`).innerText = stats[statKey];
+      document.getElementById('points-left').innerText = puntosDisponibles;
+    }
+
+    function guardarPersonaje(e) {
+      e.preventDefault();
+      
+      const nuevoPersonaje = {
+        alias: document.getElementById('char-alias').value,
+        background: document.getElementById('char-background').value,
+        role: document.getElementById('selected-role').value,
+        stats: { ...stats },
+        hp: 100,
+        ram: 20
+      };
+
+      // Guardar en localStorage para conectar dinámicamente con el index
+      const personajesGuardados = JSON.parse(localStorage.getItem('cyber_personajes') || '[]');
+      personajesGuardados.push(nuevoPersonaje);
+      localStorage.setItem('cyber_personajes', JSON.stringify(personajesGuardados));
+
+      alert(`Personaje "${nuevoPersonaje.alias}" guardado correctamente.`);
+      window.location.href = 'index.html';
+    }
+  </script>
+
+</body>
+</html>

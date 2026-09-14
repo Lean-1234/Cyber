@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CYBERPUNK RPG - SESSION HUD & GM CONTROL</title>
   
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Fuentes Sci-Fi / Cyberpunk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -44,17 +41,13 @@
     }
 
     .glow-cyan { text-shadow: 0 0 8px var(--neon-cyan); }
+    .glow-yellow { text-shadow: 0 0 8px var(--neon-yellow); }
 
     .cyber-input {
       background: rgba(5, 8, 15, 0.9);
       border: 1px solid rgba(0, 243, 255, 0.4);
       color: var(--neon-cyan);
       font-family: 'Share Tech Mono', monospace;
-    }
-    .cyber-input:focus {
-      outline: none;
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
     }
 
     .cyber-btn-cyan {
@@ -101,7 +94,7 @@
 </head>
 <body class="p-4 md:p-6 min-h-screen flex flex-col justify-between">
 
-  <!-- CABECERA DE NAVEGACIÓN SUPERIOR -->
+  <!-- CABECERA -->
   <header class="flex flex-col md:flex-row items-center justify-between border-b border-cyan-500/30 pb-4 mb-6 gap-4">
     <div class="flex items-center space-x-3">
       <div class="h-4 w-4 bg-cyan-400 animate-ping"></div>
@@ -109,7 +102,9 @@
         <h1 class="text-2xl font-black font-title tracking-widest text-white glow-cyan">
           NETRUNNER<span class="text-cyan-400">.</span>HUD
         </h1>
-        <p class="font-mono-tech text-xs text-cyan-400/70 tracking-wider">// REALTIME MULTI-NODE SYSTEM</p>
+        <p class="font-mono-tech text-xs text-cyan-400/70 tracking-wider">
+          // USUARIO: <span id="nombre-usuario-display" class="text-yellow-400 font-bold">DESCONECTADO</span>
+        </p>
       </div>
     </div>
 
@@ -117,45 +112,186 @@
       <a href="create-character.html" class="cyber-btn-outline px-4 py-2 text-xs font-bold uppercase tracking-wider inline-block">
         [ + Crear Personaje ]
       </a>
+      <button onclick="cerrarSesion()" class="font-mono-tech text-xs text-red-400 hover:text-red-300 border border-red-500/30 px-3 py-2">
+        [ Cerrar Sesión ]
+      </button>
     </div>
   </header>
 
-  <!-- MODAL DE INICIO DE SESIÓN -->
-  <div class="max-w-md mx-auto my-auto w-full cyber-card p-6">
-    <h2 class="text-xl font-bold font-title text-center text-white glow-cyan mb-2">CONEXIÓN A SESIÓN RPG</h2>
-    <p class="font-mono-tech text-xs text-gray-400 text-center mb-6">Selecciona tu personaje o crea una sala como Game Master.</p>
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="max-w-xl mx-auto my-auto w-full">
     
-    <div class="space-y-4">
-      <div>
-        <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; CÓDIGO DE LA SESIÓN</label>
-        <input type="text" placeholder="ej: ABCDEFGH" class="cyber-input w-full px-4 py-2 text-sm uppercase">
-      </div>
+    <!-- VISTA 1: FORMULARIO DE CONEXIÓN A SALA -->
+    <div id="vista-conexion" class="cyber-card p-6">
+      <h2 class="text-xl font-bold font-title text-center text-white glow-cyan mb-2">CONEXIÓN A SESIÓN RPG</h2>
+      <p class="font-mono-tech text-xs text-gray-400 text-center mb-6">Ingresa el código de 4 caracteres de la sala o entra como GM.</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; CÓDIGO DE LA SESIÓN</label>
+          <input id="codigo-sala-input" type="text" maxlength="4" placeholder="ej: X7K2" class="cyber-input w-full px-4 py-2 text-sm uppercase tracking-widest">
+        </div>
 
-      <div>
-        <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; SELECCIONAR PERSONAJE</label>
-        <select class="cyber-input w-full px-4 py-2 text-sm bg-slate-950">
-          <option value="" disabled selected>-- Elige un personaje --</option>
-          <option value="char_1">V_Solitary (Solos / Nivel 4)</option>
-          <option value="char_2">Chrome_Netrunner (Netrunner / Nivel 3)</option>
-        </select>
-      </div>
+        <div>
+          <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; SELECCIONAR PERSONAJE</label>
+          <select id="select-personajes" class="cyber-input w-full px-4 py-2 text-sm bg-slate-950">
+            <option value="" disabled selected>Cargando personajes de MySQL...</option>
+          </select>
+        </div>
 
-      <!-- BOTONES DE ACCIÓN: CONEXIÓN DIRECTA -->
-      <div class="pt-2 grid grid-cols-2 gap-3">
-        <a href="index.html" class="cyber-btn-cyan py-3 text-xs uppercase tracking-wider text-center inline-block">
-          Unirme como Jugador
-        </a>
-        <!-- BOTÓN GAME MASTER CONECTADO DIRECTO A GM-DASHBOARD.HTML -->
-        <a href="gm-dashboard.html" class="cyber-btn-magenta py-3 text-xs uppercase tracking-wider text-center inline-block">
-          Crear Sala (Game Master)
-        </a>
+        <div class="pt-2 grid grid-cols-2 gap-3">
+          <button onclick="unirseASala()" class="cyber-btn-cyan py-3 text-xs uppercase tracking-wider text-center inline-block">
+            Unirme como Jugador
+          </button>
+          <a href="gm-dashboard.html" class="cyber-btn-magenta py-3 text-xs uppercase tracking-wider text-center inline-block">
+            Crear Sala (Game Master)
+          </a>
+        </div>
+        
+        <div id="mensaje-estado" class="text-center font-mono-tech text-xs mt-2 hidden"></div>
       </div>
     </div>
-  </div>
+
+    <!-- VISTA 2: SALA ACTIVA (OCULTA HASTA QUE SE CONECTA) -->
+    <div id="vista-sala-activa" class="cyber-card p-6 hidden space-y-4">
+      <div class="border-b border-cyan-500/30 pb-3 flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-bold font-title text-cyan-400 glow-cyan">// ESTADO DE CONEXIÓN</h2>
+          <p class="font-mono-tech text-xs text-green-400">● CONECTADO A LA SALA: <span id="codigo-conectado" class="font-bold">----</span></p>
+        </div>
+        <button onclick="desconectarseSala()" class="font-mono-tech text-xs text-red-400 border border-red-500/40 px-3 py-1 hover:bg-red-500/10">
+          [ Salir de Sala ]
+        </button>
+      </div>
+
+      <!-- Tarjeta del personaje vinculado -->
+      <div class="bg-slate-950 p-4 border border-cyan-500/30 space-y-2">
+        <div class="flex justify-between items-center">
+          <h3 id="pj-alias-display" class="font-title text-md text-yellow-400 font-bold">ALIAS_PERSONAJE</h3>
+          <span id="pj-clase-display" class="font-mono-tech text-xs bg-cyan-950 text-cyan-300 px-2 py-05 border border-cyan-500/40">CLASE</span>
+        </div>
+        <p class="font-mono-tech text-xs text-gray-400">ESTADO VITAL:</p>
+        <div class="w-full bg-slate-900 border border-cyan-500/20 h-4 p-0.5">
+          <div id="barra-hp" class="bg-cyan-400 h-full w-full transition-all"></div>
+        </div>
+        <div class="flex justify-between font-mono-tech text-xs text-cyan-300">
+          <span>HP: <span id="pj-hp-display">100/100</span></span>
+          <span>ESTADO: <span class="text-green-400">ACTIVO EN RED</span></span>
+        </div>
+      </div>
+
+      <div class="text-center font-mono-tech text-xs text-gray-400 pt-2">
+        &gt; Tu ficha ya es visible en tiempo real en el panel del Game Master. Esperando directivas...
+      </div>
+    </div>
+
+  </main>
 
   <footer class="mt-8 border-t border-cyan-500/20 pt-4 text-center text-xs font-mono-tech text-gray-500">
-    CYBERPUNK RPG SYSTEM // POWERED BY PYTHON & HTML
+    CYBERPUNK RPG SYSTEM // POWERED BY PYTHON & MYSQL
   </footer>
+
+  <script>
+    let usuarioActual = null;
+    let listaPersonajesGlobal = [];
+
+    function verificarSesion() {
+      const data = localStorage.getItem('usuario_rpg');
+      if (!data) {
+        window.location.href = 'login.html';
+        return;
+      }
+      usuarioActual = JSON.parse(data);
+      document.getElementById('nombre-usuario-display').innerText = usuarioActual.username.toUpperCase();
+      cargarPersonajes();
+    }
+
+    async function cargarPersonajes() {
+      const select = document.getElementById('select-personajes');
+      try {
+        const res = await fetch(`http://localhost:5000/api/personajes/${usuarioActual.id}`);
+        const data = await res.json();
+
+        if (data.status === 'success' && data.personajes.length > 0) {
+          listaPersonajesGlobal = data.personajes; // Guardamos para usar la info del personaje elegido
+          select.innerHTML = '<option value="" disabled selected>-- Elige tu personaje --</option>';
+          data.personajes.forEach(p => {
+            select.innerHTML += `<option value="${p.id}">${p.alias} (${p.clase} - HP: ${p.hp_actual}/${p.hp_max})</option>`;
+          });
+        } else {
+          select.innerHTML = '<option value="" disabled selected>No tienes personajes aún</option>';
+        }
+      } catch (err) {
+        select.innerHTML = '<option value="" disabled selected>Error conectando al servidor</option>';
+      }
+    }
+
+    async function unirseASala() {
+      const codigo = document.getElementById('codigo-sala-input').value.trim().toUpperCase();
+      const personajeId = document.getElementById('select-personajes').value;
+      const msg = document.getElementById('mensaje-estado');
+
+      if (!codigo || codigo.length !== 4) {
+        msg.innerText = "¡Ingresa un código válido de 4 caracteres!";
+        msg.className = "text-center font-mono-tech text-xs mt-2 text-red-500 block";
+        return;
+      }
+
+      if (!personajeId) {
+        msg.innerText = "¡Selecciona tu personaje!";
+        msg.className = "text-center font-mono-tech text-xs mt-2 text-red-500 block";
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/salas/unirse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            codigo: codigo,
+            usuario_id: usuarioActual.id,
+            personaje_id: personajeId
+          })
+        });
+
+        const data = await res.json();
+        if (data.status === 'success') {
+          // Buscar los datos del personaje seleccionado para mostrarlos en la vista activa
+          const personajeElegido = listaPersonajesGlobal.find(p => p.id == personajeId);
+          if (personajeElegido) {
+            document.getElementById('pj-alias-display').innerText = personajeElegido.alias;
+            document.getElementById('pj-clase-display').innerText = personajeElegido.clase;
+            document.getElementById('pj-hp-display').innerText = `${personajeElegido.hp_actual}/${personajeElegido.hp_max}`;
+            document.getElementById('codigo-conectado').innerText = codigo;
+          }
+
+          // Transición visual: Ocultar formulario y mostrar la ficha conectada
+          document.getElementById('vista-conexion').classList.add('hidden');
+          document.getElementById('vista-sala-activa').classList.remove('hidden');
+        } else {
+          msg.innerText = data.message;
+          msg.className = "text-center font-mono-tech text-xs mt-2 text-red-500 block";
+        }
+      } catch (err) {
+        msg.innerText = "Error conectando con el servidor Python";
+        msg.className = "text-center font-mono-tech text-xs mt-2 text-red-500 block";
+      }
+    }
+
+    function desconectarseSala() {
+      // Volver a la vista del formulario para cambiar de sala o personaje
+      document.getElementById('vista-sala-activa').classList.add('hidden');
+      document.getElementById('vista-conexion').classList.remove('hidden');
+      document.getElementById('codigo-sala-input').value = '';
+    }
+
+    function cerrarSesion() {
+      localStorage.removeItem('usuario_rpg');
+      window.location.href = 'login.html';
+    }
+
+    window.onload = verificarSesion;
+  </script>
 
 </body>
 </html>

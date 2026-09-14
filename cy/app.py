@@ -31,12 +31,12 @@ def get_db_connection():
 
 @app.route('/')
 def inicio():
-    """Al entrar a localhost:5000, carga directamente la pantalla de Login."""
+    """Al entrar a la raíz, carga directamente la pantalla de Login."""
     return send_from_directory('.', 'login.html')
 
 @app.route('/<path:filename>')
 def servir_archivos(filename):
-    """Permite cargar el resto de las páginas (index.html, gm-dashboard.html, etc)."""
+    """Permite cargar el resto de las páginas (index.html, gm-dashboard.html, cyberware.html, etc)."""
     if os.path.exists(filename):
         return send_from_directory('.', filename)
     return "Archivo no encontrado (404)", 404
@@ -46,7 +46,7 @@ def servir_archivos(filename):
 # AUTENTICACIÓN: REGISTRO E INICIO DE SESIÓN (API)
 # ==============================================================================
 
-# 1. REGISTRAR USUARIO (SIN PERSONAJE AUTOMÁTICO)
+# 1. REGISTRAR USUARIO
 @app.route('/api/auth/registro', methods=['POST'])
 def registrar_usuario():
     try:
@@ -72,7 +72,7 @@ def registrar_usuario():
             conn.close()
             return jsonify({"status": "error", "message": "El nombre de usuario o email ya está registrado."}), 400
 
-        # Insertar nuevo usuario (Limpiando registros basura anteriores)
+        # Insertar nuevo usuario
         cursor.execute("""
             INSERT INTO usuarios (username, email, password_hash) 
             VALUES (%s, %s, %s)
@@ -80,8 +80,6 @@ def registrar_usuario():
         
         conn.commit()
         nuevo_id = cursor.lastrowid
-
-        # ELIMINADO: Ya no creamos personajes automáticos aquí para evitar "V_Solitary"
 
         cursor.close()
         conn.close()
@@ -186,7 +184,7 @@ def crear_sala():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-# UNIRSE A LA SALA
+# UNIRSE A UNA SALA
 @app.route('/api/salas/unirse', methods=['POST'])
 def unirse_sala():
     try:
@@ -196,7 +194,7 @@ def unirse_sala():
         personaje_id = data.get('personaje_id')
 
         if not codigo or not usuario_id or not personaje_id:
-            return jsonify({"status": "error", "message": "Datos incompletos para unirse a la sala."}), 400
+            return jsonify({"status": "error", "message": "Datos incompletos para unirse a sala."}), 400
 
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -228,7 +226,7 @@ def unirse_sala():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-# OBTENER JUGADORES CONECTADOS A LA SALA
+# OBTENER JUGADORES CONECTADOS A LA SALA (EN TIEMPO REAL PARA EL GM)
 @app.route('/api/salas/<int:sala_id>/jugadores', methods=['GET'])
 def obtener_jugadores_sala(sala_id):
     try:
@@ -251,6 +249,6 @@ def obtener_jugadores_sala(sala_id):
 
 if __name__ == '__main__':
     print("\n========================================================")
-    print(" SERVIDOR CYBERPUNK RPG INICIADO EN http://localhost:5000 ")
+    print(" SERVIDOR CYBERPUNK RPG INICIADO EN http://0.0.0.0:5000 ")
     print("========================================================\n")
     app.run(host='0.0.0.0', port=5000, debug=True)

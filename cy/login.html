@@ -3,238 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBERPUNK RPG - ACCESS PORTAL</title>
-  
+  <title>CYBERPUNK RPG - ACCESO AL SISTEMA</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --neon-cyan: #00f3ff;
-      --neon-magenta: #ff0055;
-      --neon-yellow: #fcee0a;
-      --cyber-bg: #090a10;
-      --card-bg: rgba(14, 18, 28, 0.95);
-    }
-
-    body {
-      background-color: var(--cyber-bg);
-      font-family: 'Rajdhani', sans-serif;
-      color: #e2e8f0;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(0, 243, 255, 0.05) 0%, transparent 70%),
-        linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 243, 255, 0.02) 3px, rgba(0, 243, 255, 0.02) 3px);
-      min-height: 100vh;
-    }
-
+    body { background-color: #050508; font-family: 'Rajdhani', sans-serif; color: #e2e8f0; }
     .font-title { font-family: 'Orbitron', sans-serif; }
-    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
-
-    .cyber-card {
-      background: var(--card-bg);
-      border: 1px solid rgba(0, 243, 255, 0.3);
-      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-      box-shadow: 0 0 25px rgba(0, 243, 255, 0.1);
-    }
-
-    .glow-cyan { text-shadow: 0 0 8px var(--neon-cyan); }
-
-    .cyber-input {
-      background: rgba(5, 8, 15, 0.9);
-      border: 1px solid rgba(0, 243, 255, 0.4);
-      color: var(--neon-cyan);
-      font-family: 'Share Tech Mono', monospace;
-    }
-    .cyber-input:focus {
-      outline: none;
-      border-color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
-    }
-
-    .cyber-btn-cyan {
-      background: linear-gradient(135deg, var(--neon-cyan) 0%, #0088cc 100%);
-      color: #000;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-      transition: all 0.2s;
-    }
-    .cyber-btn-cyan:hover {
-      background: var(--neon-yellow);
-      box-shadow: 0 0 15px var(--neon-yellow);
-    }
-
-    .cyber-btn-tab-active {
-      border: 1px solid var(--neon-cyan);
-      color: var(--neon-cyan);
-      background: rgba(0, 243, 255, 0.1);
-    }
-    .cyber-btn-tab-inactive {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #64748b;
-      background: rgba(0, 0, 0, 0.2);
-    }
+    .cyber-box { background: rgba(10, 15, 25, 0.9); border: 1px solid rgba(0, 243, 255, 0.3); }
+    .cyber-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(0, 243, 255, 0.4); color: #00f3ff; }
+    .cyber-input:focus { border-color: #fcee0a; outline: none; }
+    .cyber-btn { background: #00f3ff; color: #000; font-family: 'Orbitron', sans-serif; font-weight: 700; transition: all 0.2s; }
+    .cyber-btn:hover { background: #fcee0a; box-shadow: 0 0 15px rgba(252, 238, 10, 0.5); }
   </style>
 </head>
-<body class="p-4 min-h-screen flex flex-col items-center justify-center">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-  <div class="max-w-md w-full cyber-card p-6 md:p-8">
-    
-    <!-- HEADER -->
-    <div class="text-center mb-6">
-      <p class="font-mono-tech text-xs text-cyan-400/70 tracking-wider mb-1">// SYSTEM VER: 2.0.77 // SECURE CONNECTION</p>
-      <h1 class="text-2xl font-black font-title tracking-widest text-white glow-cyan">
-        NETRUNNER<span class="text-cyan-400">.</span>OS
-      </h1>
-      <p class="font-mono-tech text-[10px] text-gray-400 tracking-widest mt-1">PORTAL DE ACCESO A SESIÓN CYBERPUNK RPG</p>
+  <div class="cyber-box p-8 rounded-lg max-w-md w-full shadow-2xl relative">
+    <div class="absolute top-0 left-0 w-2 h-2 bg-cyan-400"></div>
+    <div class="absolute top-0 right-0 w-2 h-2 bg-cyan-400"></div>
+    <div class="absolute bottom-0 left-0 w-2 h-2 bg-cyan-400"></div>
+    <div class="absolute bottom-0 right-0 w-2 h-2 bg-cyan-400"></div>
+
+    <h1 class="font-title text-2xl text-center text-cyan-400 mb-2 tracking-wider">NET_ACCESS // LOGIN</h1>
+    <p class="text-xs text-center text-gray-400 mb-6 font-mono">AUTENTICACIÓN DE NETRUNNER</p>
+
+    <!-- Pestañas -->
+    <div class="flex mb-6 border-b border-cyan-500/30">
+      <button id="tab-login" onclick="cambiarTab('login')" class="flex-1 pb-2 font-title text-sm text-cyan-400 border-b-2 border-cyan-400">INICIAR SESIÓN</button>
+      <button id="tab-registro" onclick="cambiarTab('registro')" class="flex-1 pb-2 font-title text-sm text-gray-500">REGISTRO</button>
     </div>
 
-    <!-- SELECTOR DE MODO (LOGIN / REGISTRO) -->
-    <div class="grid grid-cols-2 gap-2 mb-6 font-title text-xs">
-      <button id="btn-modo-login" onclick="cambiarModo('login')" class="cyber-btn-tab-active py-2 text-center uppercase tracking-wider font-bold">
-        [ INICIAR SESIÓN ]
-      </button>
-      <button id="btn-modo-registro" onclick="cambiarModo('registro')" class="cyber-btn-tab-inactive py-2 text-center uppercase tracking-wider">
-        [ NUEVA CUENTA ]
-      </button>
-    </div>
+    <!-- Alerta de mensajes -->
+    <div id="mensaje-alerta" class="hidden p-3 mb-4 text-xs font-mono rounded border"></div>
 
-    <!-- FORMULARIO UNIFICADO -->
-    <form onsubmit="procesarAcceso(event)" class="space-y-4">
+    <!-- FORMULARIO LOGIN -->
+    <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
       <div>
-        <label id="label-usuario" class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; HANDLE / USUARIO NEURONAL</label>
-        <input id="input-usuario" type="text" required class="cyber-input w-full px-4 py-2 text-sm">
+        <label class="block text-xs font-title text-gray-400 mb-1">USUARIO O EMAIL</label>
+        <input type="text" id="login-user" required class="cyber-input w-full p-3 rounded text-sm">
       </div>
-
       <div>
-        <label class="block font-mono-tech text-xs text-cyan-400 mb-1">&gt; ENCRIPTACIÓN / PASSCODE</label>
-        <input id="input-password" type="password" required class="cyber-input w-full px-4 py-2 text-sm">
+        <label class="block text-xs font-title text-gray-400 mb-1">CONTRASEÑA</label>
+        <input type="password" id="login-pass" required class="cyber-input w-full p-3 rounded text-sm">
       </div>
-
-      <div class="flex items-center justify-between text-xs font-mono-tech text-gray-400 pt-1">
-        <label class="flex items-center space-x-2 cursor-pointer">
-          <input type="checkbox" class="accent-cyan-400">
-          <span>Recordar Credenciales</span>
-        </label>
-        <span class="text-cyan-400/70 hover:underline cursor-pointer">// Clave Olvidada?</span>
-      </div>
-
-      <button type="submit" id="btn-submit" class="cyber-btn-cyan w-full py-3 text-xs uppercase tracking-wider mt-2">
-        [ CONECTAR A LA RED ]
-      </button>
+      <button type="submit" class="cyber-btn w-full py-3 rounded text-sm tracking-widest mt-2">ACCEDER AL SISTEMA</button>
     </form>
 
-    <!-- MENSAJES DE ESTADO DINÁMICOS -->
-    <div id="mensaje-feedback" class="text-center font-mono-tech text-xs mt-4 hidden"></div>
-
-    <!-- PIE DEL MODAL -->
-    <div class="mt-6 text-center border-t border-cyan-500/20 pt-4">
-      <p class="font-mono-tech text-xs text-gray-500" id="texto-alternativo">
-        ¿No posees una ID Registrada?<br>
-        <span onclick="cambiarModo('registro')" class="text-cyan-400 hover:underline cursor-pointer font-bold">
-          &gt; CREAR NUEVO REGISTRO DE NETRUNNER &lt;
-        </span>
-      </p>
-    </div>
-
+    <!-- FORMULARIO REGISTRO -->
+    <form id="form-registro" onsubmit="handleRegistro(event)" class="space-y-4 hidden">
+      <div>
+        <label class="block text-xs font-title text-gray-400 mb-1">NOMBRE DE USUARIO</label>
+        <input type="text" id="reg-user" required class="cyber-input w-full p-3 rounded text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-title text-gray-400 mb-1">CORREO ELECTRÓNICO</label>
+        <input type="email" id="reg-email" required class="cyber-input w-full p-3 rounded text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-title text-gray-400 mb-1">CONTRASEÑA</label>
+        <input type="password" id="reg-pass" required class="cyber-input w-full p-3 rounded text-sm">
+      </div>
+      <button type="submit" class="cyber-btn w-full py-3 rounded text-sm tracking-widest mt-2">REGISTRAR CUENTA</button>
+    </form>
   </div>
 
-  <footer class="mt-6 text-center font-mono-tech text-[10px] text-gray-600 tracking-widest flex justify-between w-full max-w-md px-2">
-    <span>SERVIDORES: ONLINE</span>
-    <span>PING: 14ms</span>
-  </footer>
-
   <script>
-    let modoActual = 'login'; // 'login' o 'registro'
+    function cambiarTab(tipo) {
+      const fLogin = document.getElementById('form-login');
+      const fReg = document.getElementById('form-registro');
+      const tLogin = document.getElementById('tab-login');
+      const tReg = document.getElementById('tab-registro');
+      const alerta = document.getElementById('mensaje-alerta');
+      alerta.classList.add('hidden');
 
-    function cambiarModo(modo) {
-      modoActual = modo;
-      const btnLogin = document.getElementById('btn-modo-login');
-      const btnRegistro = document.getElementById('btn-modo-registro');
-      const btnSubmit = document.getElementById('btn-submit');
-      const textoAlt = document.getElementById('texto-alternativo');
-      const msg = document.getElementById('mensaje-feedback');
-      msg.classList.add('hidden');
-
-      if (modo === 'login') {
-        btnLogin.className = "cyber-btn-tab-active py-2 text-center uppercase tracking-wider font-bold";
-        btnRegistro.className = "cyber-btn-tab-inactive py-2 text-center uppercase tracking-wider";
-        btnSubmit.innerText = "[ CONECTAR A LA RED ]";
-        textoAlt.innerHTML = `¿No posees una ID Registrada?<br><span onclick="cambiarModo('registro')" class="text-cyan-400 hover:underline cursor-pointer font-bold">&gt; CREAR NUEVO REGISTRO DE NETRUNNER &lt;</span>`;
+      if (tipo === 'login') {
+        fLogin.classList.remove('hidden');
+        fReg.classList.add('hidden');
+        tLogin.className = "flex-1 pb-2 font-title text-sm text-cyan-400 border-b-2 border-cyan-400";
+        tReg.className = "flex-1 pb-2 font-title text-sm text-gray-500";
       } else {
-        btnRegistro.className = "cyber-btn-tab-active py-2 text-center uppercase tracking-wider font-bold";
-        btnLogin.className = "cyber-btn-tab-inactive py-2 text-center uppercase tracking-wider";
-        btnSubmit.innerText = "[ REGISTRAR NUEVA ID ]";
-        textoAlt.innerHTML = `¿Ya posees una cuenta?<br><span onclick="cambiarModo('login')" class="text-cyan-400 hover:underline cursor-pointer font-bold">&gt; INICIAR SESIÓN EN LA RED &lt;</span>`;
+        fLogin.classList.add('hidden');
+        fReg.classList.remove('hidden');
+        tReg.className = "flex-1 pb-2 font-title text-sm text-cyan-400 border-b-2 border-cyan-400";
+        tLogin.className = "flex-1 pb-2 font-title text-sm text-gray-500";
       }
     }
 
-    async function procesarAcceso(e) {
+    function mostrarAlerta(texto, esError = true) {
+      const alerta = document.getElementById('mensaje-alerta');
+      alerta.textContent = texto;
+      alerta.className = `p-3 mb-4 text-xs font-mono rounded border ${esError ? 'bg-red-950/80 border-red-500 text-red-300' : 'bg-cyan-950/80 border-cyan-500 text-cyan-300'}`;
+      alerta.classList.remove('hidden');
+    }
+
+    async function handleLogin(e) {
       e.preventDefault();
-      const usuarioInput = document.getElementById('input-usuario').value.trim();
-      const passwordInput = document.getElementById('input-password').value;
-      const msg = document.getElementById('mensaje-feedback');
+      const username_or_email = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value;
 
-      msg.classList.remove('hidden');
-      msg.innerText = "Estableciendo enlace seguro con la base de datos...";
-      msg.className = "text-center font-mono-tech text-xs mt-4 text-yellow-400 block";
+      try {
+        const res = await fetch(`${window.location.origin}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username_or_email, password })
+        });
+        const data = await res.json();
 
-      if (modoActual === 'login') {
-        // --- PROCESO DE INICIO DE SESIÓN ---
-        try {
-          const res = await fetch('http://localhost:5000/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username_or_email: usuarioInput, password: passwordInput })
-          });
-          const data = await res.json();
-
-          if (data.status === 'success') {
-            localStorage.setItem('usuario_rpg', JSON.stringify(data.usuario));
-            msg.innerText = "¡Acceso concedido! Abriendo HUD...";
-            msg.className = "text-center font-mono-tech text-xs mt-4 text-green-400 block";
-            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
-          } else {
-            msg.innerText = data.message || "Credenciales incorrectas.";
-            msg.className = "text-center font-mono-tech text-xs mt-4 text-red-500 block";
-          }
-        } catch (err) {
-          msg.innerText = "Error: El servidor Python (app.py) está apagado o inaccesible.";
-          msg.className = "text-center font-mono-tech text-xs mt-4 text-red-500 block";
+        if (res.ok) {
+          localStorage.setItem('usuario', JSON.stringify(data.usuario));
+          window.location.href = 'index.html';
+        } else {
+          mostrarAlerta(data.message);
         }
+      } catch (err) {
+        mostrarAlerta("Error de conexión con el servidor central.");
+      }
+    }
 
-      } else {
-        // --- PROCESO DE REGISTRO ---
-        try {
-          // Generamos un email automático interno para simplificar el registro rápido
-          const emailFicticio = `${usuarioInput.toLowerCase().replace(/\s+/g, '')}@nightcity.net`;
+    async function handleRegistro(e) {
+      e.preventDefault();
+      const username = document.getElementById('reg-user').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-pass').value;
 
-          const res = await fetch('http://localhost:5000/api/auth/registro', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: usuarioInput, email: emailFicticio, password: passwordInput })
-          });
-          const data = await res.json();
+      try {
+        const res = await fetch(`${window.location.origin}/api/auth/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+        const data = await res.json();
 
-          if (data.status === 'success') {
-            localStorage.setItem('usuario_rpg', JSON.stringify(data.usuario));
-            msg.innerText = "¡Registro creado en MySQL! Abriendo HUD...";
-            msg.className = "text-center font-mono-tech text-xs mt-4 text-green-400 block";
-            setTimeout(() => { window.location.href = 'index.html'; }, 1000);
-          } else {
-            msg.innerText = data.message || "Error al registrar el usuario.";
-            msg.className = "text-center font-mono-tech text-xs mt-4 text-red-500 block";
-          }
-        } catch (err) {
-          msg.innerText = "Error: El servidor Python (app.py) está apagado o inaccesible.";
-          msg.className = "text-center font-mono-tech text-xs mt-4 text-red-500 block";
+        if (res.ok) {
+          mostrarAlerta("¡Registro exitoso! Ya puedes iniciar sesión.", false);
+          cambiarTab('login');
+        } else {
+          mostrarAlerta(data.message);
         }
+      } catch (err) {
+        mostrarAlerta("Error de conexión con el servidor central.");
       }
     }
   </script>
-
 </body>
 </html>

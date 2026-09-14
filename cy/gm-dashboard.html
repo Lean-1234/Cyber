@@ -3,222 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBERPUNK RPG - GAME MASTER DASHBOARD</title>
-  
+  <title>CYBERPUNK RPG - PANEL GM</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --neon-cyan: #00f3ff;
-      --neon-magenta: #ff0055;
-      --neon-yellow: #fcee0a;
-      --cyber-bg: #090a10;
-      --card-bg: rgba(22, 10, 20, 0.9);
-    }
-
-    body {
-      background-color: var(--cyber-bg);
-      font-family: 'Rajdhani', sans-serif;
-      color: #e2e8f0;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(255, 0, 85, 0.05) 0%, transparent 70%),
-        linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.88)),
-        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 85, 0.02) 3px, rgba(255, 0, 85, 0.02) 3px);
-      min-height: 100vh;
-    }
-
+    body { background-color: #050508; font-family: 'Rajdhani', sans-serif; color: #e2e8f0; }
     .font-title { font-family: 'Orbitron', sans-serif; }
-    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
-
-    .cyber-card-gm {
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 0, 85, 0.4);
-      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-      box-shadow: 0 0 20px rgba(255, 0, 85, 0.1);
-    }
-
-    .glow-magenta { text-shadow: 0 0 10px var(--neon-magenta); }
-    .glow-yellow { text-shadow: 0 0 8px var(--neon-yellow); }
-
-    .cyber-input {
-      background: rgba(10, 5, 12, 0.9);
-      border: 1px solid rgba(255, 0, 85, 0.4);
-      color: var(--neon-yellow);
-      font-family: 'Share Tech Mono', monospace;
-    }
-
-    .cyber-btn-magenta {
-      background: linear-gradient(135deg, var(--neon-magenta) 0%, #a00037 100%);
-      color: #fff;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700;
-      clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-      transition: all 0.2s;
-    }
-
-    .cyber-btn-outline-gm {
-      border: 1px solid var(--neon-magenta);
-      color: var(--neon-magenta);
-      background: rgba(255, 0, 85, 0.05);
-      font-family: 'Orbitron', sans-serif;
-      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-      transition: all 0.2s;
-    }
-    .cyber-btn-outline-gm:hover {
-      background: var(--neon-magenta);
-      color: #fff;
-      box-shadow: 0 0 12px var(--neon-magenta);
-    }
+    .cyber-box { background: rgba(10, 15, 25, 0.9); border: 1px solid rgba(255, 153, 0, 0.4); }
   </style>
 </head>
-<body class="p-4 md:p-6 min-h-screen flex flex-col justify-between">
+<body class="p-6 min-h-screen flex flex-col justify-between">
 
-  <!-- CABECERA GM -->
-  <header class="flex flex-col md:flex-row items-center justify-between border-b border-pink-500/30 pb-4 mb-6 gap-4">
-    <div class="flex items-center space-x-3">
-      <div class="h-4 w-4 bg-pink-500 animate-ping"></div>
-      <div>
-        <h1 class="text-2xl font-black font-title tracking-widest text-white glow-magenta">
-          GAME MASTER<span class="text-pink-500">.</span>CONTROL
-        </h1>
-        <p class="font-mono-tech text-xs text-pink-400/70 tracking-wider">
-          // HOST: <span id="gm-name-display" class="text-white font-bold">CARGANDO...</span>
-        </p>
-      </div>
+  <header class="cyber-box px-6 py-4 rounded-lg flex justify-between items-center mb-6">
+    <div>
+      <span class="text-xs text-orange-400 font-mono block">MODO GAME MASTER ACTIVO</span>
+      <h1 class="font-title text-xl text-orange-400 font-bold">SALA CÓDIGO: <span id="display-codigo" class="text-white tracking-widest">----</span></h1>
     </div>
-
-    <!-- CÓDIGO DE SALA DESDE LA BASE DE DATOS -->
-    <div class="flex items-center space-x-4 bg-slate-950 px-5 py-3 border border-pink-500/40">
-      <div class="text-right font-mono-tech">
-        <span class="text-gray-400 text-xs block">CÓDIGO DE SALA:</span>
-        <span id="room-code-display" class="text-yellow-400 font-black font-title text-2xl tracking-widest glow-yellow">....</span>
-      </div>
-      <a href="index.html" class="font-mono-tech text-xs text-gray-500 hover:text-pink-400 ml-4 border-l border-gray-800 pl-4">
-        [ Volver al HUB ]
-      </a>
-    </div>
+    <a href="index.html" class="border border-cyan-500/50 text-cyan-400 px-4 py-2 text-xs font-title rounded hover:bg-cyan-950/40">[ &lt; VOLVER AL HUB ]</a>
   </header>
 
-  <!-- CONTENIDO GAME MASTER -->
-  <main class="max-w-6xl mx-auto w-full space-y-6">
-    
-    <!-- CONTROL DE JUGADORES EN VIVO -->
-    <div class="cyber-card-gm p-6">
-      <div class="flex justify-between items-center border-b border-pink-500/30 pb-3 mb-4">
-        <h2 class="text-lg font-bold font-title text-pink-500">// FICHAS DE JUGADORES EN LÍNEA</h2>
-        <span id="contador-jugadores" class="font-mono-tech text-xs text-gray-400">JUGADORES CONECTADOS: 0</span>
-      </div>
-
-      <!-- Contenedor dinámico limpio -->
-      <div id="contenedor-jugadores" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="text-center py-6 font-mono-tech text-sm text-gray-500 md:col-span-2">
+  <main class="max-w-5xl mx-auto w-full my-auto space-y-6">
+    <div class="cyber-box p-6 rounded-lg">
+      <h2 class="font-title text-sm text-orange-400 mb-4 tracking-wider">// JUGADORES CONECTADOS EN TIEMPO REAL</h2>
+      
+      <div id="lista-jugadores" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 bg-black/50 border border-gray-800 rounded font-mono text-xs text-gray-500">
           Esperando conexiones de netrunners...
         </div>
       </div>
     </div>
-
-    <!-- CONSOLA DE ALERTAS -->
-    <div class="cyber-card-gm p-6">
-      <h2 class="text-lg font-bold font-title text-yellow-400 mb-4 border-b border-yellow-500/30 pb-2">// EMITIR MENSAJE O ALERTA GENERAL</h2>
-      <form action="#" onsubmit="event.preventDefault();" class="flex gap-4">
-        <input type="text" placeholder="Escribe un aviso para los jugadores..." class="cyber-input w-full px-4 py-3 text-sm">
-        <button type="submit" class="cyber-btn-magenta px-6 py-3 text-xs uppercase tracking-wider whitespace-nowrap">
-          Enviar Alerta
-        </button>
-      </form>
-    </div>
-
   </main>
 
-  <footer class="mt-8 border-t border-pink-500/20 pt-4 text-center text-xs font-mono-tech text-gray-500">
-    CYBERPUNK RPG SYSTEM // MASTER CONTROL INTERFACE
+  <footer class="text-center text-xs text-gray-600 font-mono mt-8">
+    GM SURVEILLANCE PROTOCOL // CYBERPUNK RPG
   </footer>
 
   <script>
-    let gmActual = null;
-    let salaActivaId = null;
+    let salaId = localStorage.getItem('sala_gm_id');
+    let codigoSala = localStorage.getItem('sala_gm_codigo');
 
-    function verificarSesionGM() {
-      const data = localStorage.getItem('usuario_rpg');
-      if (!data) {
-        window.location.href = 'login.html';
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!salaId || !codigoSala) {
+        alert("No hay una sala activa de GM registrada.");
+        window.location.href = 'index.html';
         return;
       }
-      gmActual = JSON.parse(data);
-      document.getElementById('gm-name-display').innerText = gmActual.username.toUpperCase();
-      gestionSalaGM();
-    }
+      document.getElementById('display-codigo').textContent = codigoSala;
+      
+      obtenerJugadores();
+      setInterval(obtenerJugadores, 3000);
+    });
 
-    async function gestionSalaGM() {
-      const codeDisplay = document.getElementById('room-code-display');
+    async function obtenerJugadores() {
       try {
-        const res = await fetch('http://localhost:5000/api/salas/crear', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ gm_id: gmActual.id }) 
-        });
+        const res = await fetch(`${window.location.origin}/api/salas/${salaId}/jugadores`);
         const data = await res.json();
+        const contenedor = document.getElementById('lista-jugadores');
 
-        if (data.status === 'success') {
-          codeDisplay.innerText = data.codigo;
-          salaActivaId = data.sala_id;
-          
-          setInterval(actualizarJugadores, 2000);
-          actualizarJugadores();
+        if (data.status === 'success' && data.jugadores.length > 0) {
+          contenedor.innerHTML = data.jugadores.map(j => `
+            <div class="p-4 bg-black/60 border border-cyan-500/30 rounded flex justify-between items-center">
+              <div>
+                <span class="text-xs text-orange-400 font-mono block">JUGADOR: ${j.username.toUpperCase()}</span>
+                <h3 class="font-title text-cyan-300 text-sm font-bold">${j.alias}</h3>
+                <span class="text-xs text-gray-400 font-mono">CLASE: ${j.clase}</span>
+              </div>
+              <div class="text-right font-mono text-xs">
+                <span class="text-green-400 font-bold block">HP: ${j.hp_actual} / ${j.hp_max}</span>
+              </div>
+            </div>
+          `).join('');
         } else {
-          codeDisplay.innerText = "ERR";
+          contenedor.innerHTML = `
+            <div class="p-4 bg-black/50 border border-gray-800 rounded font-mono text-xs text-gray-500">
+              Ningún jugador conectado todavía. Comparte tu enlace de ngrok y tu código de sala (<span class="text-orange-400 font-bold">${codigoSala}</span>).
+            </div>`;
         }
       } catch (err) {
-        codeDisplay.innerText = "OFFLINE";
+        console.error("Error al actualizar jugadores", err);
       }
     }
-
-    async function actualizarJugadores() {
-      if (!salaActivaId) return;
-
-      try {
-        const res = await fetch(`http://localhost:5000/api/salas/${salaActivaId}/jugadores`);
-        const data = await res.json();
-        
-        const contenedor = document.getElementById('contenedor-jugadores');
-        const contador = document.getElementById('contador-jugadores');
-
-        if (data.status === 'success') {
-          contador.innerText = `JUGADORES CONECTADOS: ${data.jugadores.length}`;
-          
-          if (data.jugadores.length === 0) {
-            contenedor.innerHTML = `
-              <div class="text-center py-6 font-mono-tech text-sm text-gray-500 md:col-span-2">
-                Esperando a que los jugadores ingresen el código de la sala...
-              </div>`;
-          } else {
-            contenedor.innerHTML = ''; 
-            data.jugadores.forEach(jugador => {
-              contenedor.innerHTML += `
-                <div class="bg-slate-950/80 p-4 border border-pink-500/20 flex justify-between items-center">
-                  <div>
-                    <h3 class="font-title text-sm text-cyan-400">${jugador.alias} <span class="text-xs text-gray-500 font-mono-tech">(${jugador.username})</span></h3>
-                    <p class="font-mono-tech text-xs text-gray-400 mt-1">CLASE: ${jugador.clase} | HP: ${jugador.hp_actual}/${jugador.hp_max}</p>
-                  </div>
-                  <div class="flex space-x-2">
-                    <button class="cyber-btn-outline-gm text-xs px-2 py-1">-10 HP</button>
-                    <button class="cyber-btn-outline-gm text-xs px-2 py-1">+10 HP</button>
-                  </div>
-                </div>
-              `;
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error buscando jugadores:", error);
-      }
-    }
-
-    window.onload = verificarSesionGM;
   </script>
-
 </body>
 </html>

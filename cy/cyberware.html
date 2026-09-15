@@ -96,19 +96,19 @@
 </head>
 <body class="flex flex-col justify-between min-h-screen p-4">
 
-  <!-- BARRA SUPERIOR ESTILO HUD -->
+  <!-- BARRA SUPERIOR ESTILO HUD (Limpiada de Trade/Character y con dinero en 0) -->
   <header class="top-bar-stats px-6 py-3 flex justify-between items-center text-xs font-mono-tech">
     <div class="flex items-center space-x-6">
       <span class="text-yellow-400 font-bold text-sm">50 <span class="text-gray-400 font-normal">LEVEL</span></span>
       <span class="text-yellow-400 font-bold text-sm">50 <span class="text-gray-400 font-normal">STREET CRED</span></span>
     </div>
-    <div class="flex space-x-6 font-title text-sm">
-      <span class="text-gray-500 cursor-pointer hover:text-white">[1] TRADE</span>
-      <span class="text-cyan-400 border-b-2 border-cyan-400 pb-1 glow-cyan">[2] CYBERWARE</span>
-      <span class="text-gray-500 cursor-pointer hover:text-white">[3] CHARACTER</span>
+    
+    <div class="flex font-title text-sm">
+      <span class="text-cyan-400 border-b-2 border-cyan-400 pb-1 glow-cyan">[ CYBERWARE ]</span>
     </div>
+
     <div class="flex items-center space-x-4 text-yellow-400 font-bold text-sm">
-      <span>€$ 645141</span>
+      <span>€$ 0</span>
       <a href="index.html" class="text-xs text-gray-400 hover:text-cyan-400 border border-cyan-500/30 px-3 py-1 ml-4">[ &lt; VOLVER AL HUB ]</a>
     </div>
   </header>
@@ -152,11 +152,11 @@
       <div class="absolute w-48 h-[400px] bg-cyan-500/5 blur-3xl rounded-full pointer-events-none"></div>
       
       <div class="relative flex flex-col items-center justify-center h-[420px] w-64">
-        <!-- SVG simple y esquemático (Círculo para cabeza y rectángulo para cuerpo) -->
+        <!-- SVG simple y esquemático -->
         <svg class="w-40 h-72 text-cyan-400 opacity-90 filter drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" viewBox="0 0 100 180" fill="none" stroke="currentColor" stroke-width="2">
-          <!-- Cabeza (Círculo simple) -->
+          <!-- Cabeza -->
           <circle cx="50" cy="25" r="18"/>
-          <!-- Cuerpo (Rectángulo simple) -->
+          <!-- Cuerpo -->
           <rect x="30" y="50" width="40" height="90" rx="4"/>
         </svg>
         

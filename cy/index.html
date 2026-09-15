@@ -16,9 +16,13 @@
     .cyber-btn:hover { background: #fcee0a; box-shadow: 0 0 15px rgba(252, 238, 10, 0.5); }
     .cyber-btn-alt { background: transparent; border: 1px solid #ff9900; color: #ff9900; font-family: 'Orbitron', sans-serif; font-weight: 700; }
     .cyber-btn-alt:hover { background: rgba(255, 153, 0, 0.1); box-shadow: 0 0 15px rgba(255, 153, 0, 0.3); }
+    .cyber-btn-green { background: transparent; border: 1px solid #00ff66; color: #00ff66; font-family: 'Orbitron', sans-serif; font-weight: 700; }
+    .cyber-btn-green:hover { background: rgba(0, 255, 102, 0.1); box-shadow: 0 0 15px rgba(0, 255, 102, 0.3); }
+    .cyber-btn-danger { background: transparent; border: 1px solid #ff3333; color: #ff3333; font-family: 'Orbitron', sans-serif; font-weight: 700; }
+    .cyber-btn-danger:hover { background: rgba(255, 51, 51, 0.1); box-shadow: 0 0 15px rgba(255, 51, 51, 0.3); }
   </style>
 </head>
-<body class="p-6 min-h-screen flex flex-col justify-between">
+<body class="p-6 min-h-screen flex flex-col justify-between relative">
 
   <!-- BARRA SUPERIOR -->
   <header class="cyber-box px-6 py-4 rounded-lg flex justify-between items-center mb-8">
@@ -26,17 +30,18 @@
       <span class="text-xs text-gray-400 font-mono block">NETRUNNER CONECTADO:</span>
       <span id="nombre-usuario" class="font-title text-cyan-400 font-bold text-sm">Cargando...</span>
     </div>
-    <div class="flex gap-4">
+    <div class="flex gap-4 items-center">
+      <a href="crear-personaje.html" class="cyber-btn-green px-4 py-2 text-xs rounded flex items-center">+ CREAR CARÁCTER</a>
       <a href="cyberware.html" class="cyber-btn-alt px-4 py-2 text-xs rounded flex items-center">MATRIX CYBERWARE</a>
       <button onclick="cerrarSesion()" class="border border-red-500/50 text-red-400 px-4 py-2 text-xs font-title rounded hover:bg-red-950/40">CERRAR SESIÓN</button>
     </div>
   </header>
 
   <!-- CONTENIDO CENTRAL -->
-  <main class="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 my-auto">
+  <main class="max-w-4xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8 my-auto" id="main-container">
     
     <!-- SECCIÓN UNIRSE A SALA -->
-    <div class="cyber-box p-6 rounded-lg flex flex-col justify-between">
+    <div class="cyber-box p-6 rounded-lg flex flex-col justify-between" id="seccion-unirse">
       <div>
         <h2 class="font-title text-lg text-cyan-400 mb-2">// UNIRSE A SESIÓN</h2>
         <p class="text-xs text-gray-400 mb-6 font-mono">Ingresa el código de 4 dígitos entregado por tu Game Master para sincronizar tu personaje.</p>
@@ -59,7 +64,7 @@
     </div>
 
     <!-- SECCIÓN PANEL DE GAME MASTER -->
-    <div class="cyber-box p-6 rounded-lg flex flex-col justify-between border-orange-500/30">
+    <div class="cyber-box p-6 rounded-lg flex flex-col justify-between border-orange-500/30" id="seccion-gm">
       <div>
         <h2 class="font-title text-lg text-orange-400 mb-2">// PANEL DE GAME MASTER</h2>
         <p class="text-xs text-gray-400 mb-6 font-mono">Crea una nueva sala segura para arbitrar tu sesión de Cyberpunk en tiempo real.</p>
@@ -75,22 +80,62 @@
 
   </main>
 
+  <!-- MODAL DE ALERTA: EL GM SE DESCONECTÓ -->
+  <div id="modal-gm-desconectado" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="cyber-box p-8 rounded-lg max-w-md w-full border-red-500 text-center space-y-4 shadow-2xl">
+      <h3 class="font-title text-base text-red-500 tracking-wider">// CONEXIÓN INTERRUMPIDA</h3>
+      <p class="text-sm font-mono text-gray-200">El Game Master se desconectó de la sala.</p>
+      <button onclick="window.location.reload()" class="cyber-btn w-full py-3 rounded text-sm tracking-widest mt-4 bg-red-600 text-white hover:bg-red-500">
+        VOLVER AL HUB PRINCIPAL
+      </button>
+    </div>
+  </div>
+
+  <!-- VENTANA MODAL DE CONFIRMACIÓN DE DESCONEXIÓN -->
+  <div id="modal-desconexion" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="cyber-box p-6 rounded-lg max-w-sm w-full border-cyan-400 text-center space-y-4 shadow-2xl">
+      <h3 class="font-title text-sm text-cyan-400 tracking-wider">// ADVERTENCIA DE RED</h3>
+      <p class="text-sm font-mono text-gray-300">¿Seguro que quieres desconectarte?</p>
+      
+      <div class="flex gap-4 pt-4">
+        <!-- Botón Cancelar en Verde que cierra el modal y cancela la salida -->
+        <button onclick="cerrarModalDesconexion()" class="flex-1 py-2.5 rounded text-xs font-title font-bold bg-transparent border border-[#00ff66] text-[#00ff66] hover:bg-[#00ff66]/10 transition-all cursor-pointer">
+          CANCELAR
+        </button>
+        <!-- Botón Aceptar con contador de 5 segundos -->
+        <button id="btn-aceptar-desconexion" onclick="confirmarDesconexion()" disabled class="flex-1 py-2.5 rounded text-xs font-title font-bold bg-gray-800 border border-gray-700 text-gray-500 cursor-not-allowed transition-all">
+          ACEPTAR (5s)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="text-center text-xs text-gray-600 font-mono mt-8">
     CYBERPUNK RPG PLATFORM // SECURE PROTOCOL v2.4
   </footer>
 
   <script>
     let usuarioActual = null;
+    let listaPersonajesGlobal = [];
+    let intervaloSync = null;
+    let salaIdActual = null;
+    let personajeSeleccionadoId = null;
+    let temporizadorContador = null;
 
     window.addEventListener('DOMContentLoaded', () => {
-      const stored = localStorage.getItem('usuario');
+      let stored = localStorage.getItem('usuario');
       if (!stored) {
         window.location.href = 'login.html';
         return;
       }
-      usuarioActual = JSON.parse(stored);
-      document.getElementById('nombre-usuario').textContent = usuarioActual.username.toUpperCase();
-      cargarPersonajes();
+      try {
+        usuarioActual = JSON.parse(stored);
+        document.getElementById('nombre-usuario').textContent = usuarioActual.username.toUpperCase();
+        cargarPersonajes();
+      } catch (e) {
+        localStorage.clear();
+        window.location.href = 'login.html';
+      }
     });
 
     async function cargarPersonajes() {
@@ -100,6 +145,7 @@
         const select = document.getElementById('select-personajes');
         
         if (data.status === 'success' && data.personajes.length > 0) {
+          listaPersonajesGlobal = data.personajes;
           select.innerHTML = data.personajes.map(p => `<option value="${p.id}">${p.alias} (${p.clase})</option>`).join('');
         } else {
           select.innerHTML = `<option value="">No tienes personajes creados aún</option>`;
@@ -111,7 +157,8 @@
 
     async function unirseSala() {
       const codigo = document.getElementById('codigo-sala').value.trim().toUpperCase();
-      const personaje_id = document.getElementById('select-personajes').value;
+      personaje_id = document.getElementById('select-personajes').value;
+      personajeSeleccionadoId = personaje_id;
 
       if (!codigo || codigo.length !== 4) {
         alert("Por favor ingresa un código de sala válido de 4 caracteres.");
@@ -131,13 +178,187 @@
         const data = await res.json();
 
         if (res.ok) {
-          alert("¡Conexión establecida con la sala!");
+          salaIdActual = data.sala_id;
+
+          document.getElementById('seccion-gm').style.display = 'none';
+          const mainContainer = document.getElementById('main-container');
+          mainContainer.classList.add('max-w-5xl');
+
+          renderizarInterfazJugador();
+
+          sincronizarDatosPartida();
+          intervaloSync = setInterval(sincronizarDatosPartida, 3000);
+
         } else {
           alert(data.message);
         }
       } catch (err) {
         alert("Error al intentar unirse a la sala.");
       }
+    }
+
+    function renderizarInterfazJugador(datosPersonaje, listaJugadores) {
+      const p = datosPersonaje || listaPersonajesGlobal.find(item => item.id == personajeSeleccionadoId) || {
+        alias: "Desconocido", clase: "N/A", origen: "N/A", hp_actual: 35, hp_max: 35
+      };
+
+      const seccionUnirse = document.getElementById('seccion-unirse');
+      seccionUnirse.className = "cyber-box p-6 rounded-lg flex flex-col justify-between md:col-span-1";
+      seccionUnirse.innerHTML = `
+        <div>
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="font-title text-sm text-cyan-400 tracking-wider">// ESTADO: EN SESIÓN ACTIVA</h2>
+            <span class="px-2 py-0.5 bg-green-950 border border-green-500 text-green-400 text-xs font-mono rounded animate-pulse font-bold">CONECTADO</span>
+          </div>
+          <p class="text-xs text-gray-400 mb-4 font-mono">Sincronizado con la red del Game Master en tiempo real.</p>
+          
+          <div class="p-4 bg-black/80 border border-cyan-500/50 rounded-lg space-y-3 font-mono text-xs">
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-400">ALIAS:</span>
+              <span class="text-white font-bold text-sm">${p.alias}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-400">CLASE / ROL:</span>
+              <span class="text-orange-400 font-bold">${p.clase}</span>
+            </div>
+            <div class="flex justify-between border-b border-gray-800 pb-2">
+              <span class="text-gray-400">ORIGEN:</span>
+              <span class="text-gray-300">${p.origen || 'N/A'}</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+              <span class="text-gray-400">SALUD VITAL (HP):</span>
+              <span class="text-green-400 font-bold text-sm bg-green-950/60 px-2.5 py-1 rounded border border-green-500/30">
+                ${p.hp_actual} / ${p.hp_max} HP
+              </span>
+            </div>
+            <div class="pt-1">
+              <span class="text-gray-400 block mb-1">MOCHILA / EQUIPAMIENTO:</span>
+              <div class="p-2 bg-gray-950 border border-gray-800 rounded text-gray-300 text-[11px] space-y-1">
+                <div>• Cyberdeck básico (Ranuras: 4/6)</div>
+                <div>• Munición pistola 9mm (x30)</div>
+                <div>• Parche médico de emergencia (x1)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="mostrarModalDesconexion()" class="cyber-btn-danger w-full py-3 rounded text-sm tracking-widest mt-6 cursor-pointer">DESCONECTAR / SALIR DE SALA</button>
+      `;
+
+      const seccionGm = document.getElementById('seccion-gm');
+      seccionGm.style.display = 'flex';
+      seccionGm.className = "cyber-box p-6 rounded-lg flex flex-col justify-between border-cyan-500/30 md:col-span-1";
+      
+      let htmlJugadores = `<div class="text-gray-500 text-center py-4">Esperando más operadores en la red...</div>`;
+      if (listaJugadores) {
+        const compas = listaJugadores.filter(j => j.id != personajeSeleccionadoId);
+        if (compas.length > 0) {
+          htmlJugadores = compas.map(j => `
+            <div class="p-3 bg-black/60 border border-cyan-500/30 rounded flex flex-col space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="text-cyan-300 font-bold text-sm">${j.alias}</span>
+                <span class="text-green-400 bg-green-950/60 px-2 py-0.5 rounded border border-green-500/30 font-bold text-[11px]">HP: ${j.hp_actual} / ${j.hp_max}</span>
+              </div>
+              <div class="flex justify-between text-[11px] text-gray-400">
+                <span>USER: <strong class="text-white">${j.username}</strong></span>
+                <span class="text-orange-400 font-bold">${j.clase}</span>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      seccionGm.innerHTML = `
+        <div>
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="font-title text-sm text-cyan-400 tracking-wider">// RED DE OPERADORES EN SALA</h2>
+            <span class="px-2 py-0.5 bg-cyan-950 border border-cyan-500 text-cyan-400 text-xs font-mono rounded font-bold">LIVE SYNC</span>
+          </div>
+          <p class="text-xs text-gray-400 mb-4 font-mono">Agentes conectados en la misma red de sesión.</p>
+          
+          <div id="lista-jugadores-sala" class="space-y-3 font-mono text-xs max-h-[320px] overflow-y-auto pr-1">
+            ${htmlJugadores}
+          </div>
+        </div>
+        
+        <div class="mt-6 pt-3 border-t border-cyan-500/20 text-center text-[10px] text-gray-500 font-mono">
+          ACTUALIZACIÓN AUTOMÁTICA EN TIEMPO REAL
+        </div>
+      `;
+    }
+
+    async function sincronizarDatosPartida() {
+      if (!salaIdActual) return;
+      try {
+        const resJugadores = await fetch(`${window.location.origin}/api/salas/${salaIdActual}/jugadores`);
+        const dataJugadores = await resJugadores.json();
+
+        if (dataJugadores.status === 'closed') {
+          if (intervaloSync) clearInterval(intervaloSync);
+          document.getElementById('modal-gm-desconectado').classList.remove('hidden');
+          return;
+        }
+
+        const resPersonaje = await fetch(`${window.location.origin}/api/personajes/${usuarioActual.id}`);
+        const dataPersonaje = await resPersonaje.json();
+
+        let miPersonajeActualizado = null;
+        if (dataPersonaje.status === 'success') {
+          miPersonajeActualizado = dataPersonaje.personajes.find(p => p.id == personajeSeleccionadoId);
+        }
+
+        if (dataJugadores.status === 'success') {
+          renderizarInterfazJugador(miPersonajeActualizado, dataJugadores.jugadores);
+        }
+      } catch (err) {
+        console.error("Error en sincronización", err);
+      }
+    }
+
+    function mostrarModalDesconexion() {
+      const modal = document.getElementById('modal-desconexion');
+      const btnAceptar = document.getElementById('btn-aceptar-desconexion');
+      
+      modal.classList.remove('hidden');
+      
+      let segundosRestantes = 5;
+      btnAceptar.disabled = true;
+      btnAceptar.textContent = `ACEPTAR (${segundosRestantes}s)`;
+      btnAceptar.className = "flex-1 py-2.5 rounded text-xs font-title font-bold bg-gray-800 border border-gray-700 text-gray-500 cursor-not-allowed transition-all";
+
+      if (temporizadorContador) clearInterval(temporizadorContador);
+      
+      temporizadorContador = setInterval(() => {
+        segundosRestantes--;
+        if (segundosRestantes > 0) {
+          btnAceptar.textContent = `ACEPTAR (${segundosRestantes}s)`;
+        } else {
+          clearInterval(temporizadorContador);
+          btnAceptar.disabled = false;
+          btnAceptar.textContent = "ACEPTAR";
+          btnAceptar.className = "flex-1 py-2.5 rounded text-xs font-title font-bold bg-red-950/60 border border-red-500 text-red-400 hover:bg-red-900/80 cursor-pointer transition-all";
+        }
+      }, 1000);
+    }
+
+    function cerrarModalDesconexion() {
+      if (temporizadorContador) clearInterval(temporizadorContador);
+      document.getElementById('modal-desconexion').classList.add('hidden');
+    }
+
+    async function confirmarDesconexion() {
+      cerrarModalDesconexion();
+      if (intervaloSync) clearInterval(intervaloSync);
+      try {
+        await fetch(`${window.location.origin}/api/salas/desconectar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario_id: usuarioActual.id })
+        });
+      } catch (err) {
+        console.error("Error al desconectar", err);
+      }
+      window.location.reload();
     }
 
     async function crearSalaGM() {
@@ -148,16 +369,13 @@
           body: JSON.stringify({ gm_id: usuarioActual.id })
         });
         const data = await res.json();
-
         if (res.ok) {
           localStorage.setItem('sala_gm_id', data.sala_id);
           localStorage.setItem('sala_gm_codigo', data.codigo);
           window.location.href = 'gm-dashboard.html';
-        } else {
-          alert(data.message);
         }
       } catch (err) {
-        alert("Error al crear la sala de GM.");
+        alert("Error al crear sala.");
       }
     }
 

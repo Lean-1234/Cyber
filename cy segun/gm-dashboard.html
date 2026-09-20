@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERPUNK RPG - PANEL GM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #050508; font-family: 'Rajdhani', sans-serif; color: #e2e8f0; }
+    .font-title { font-family: 'Orbitron', sans-serif; }
+    .cyber-box { background: rgba(10, 15, 25, 0.9); border: 1px solid rgba(255, 153, 0, 0.3); }
+    .cyber-btn-alt { background: transparent; border: 1px solid #ff9900; color: #ff9900; font-family: 'Orbitron', sans-serif; font-weight: 700; }
+    .cyber-btn-alt:hover { background: rgba(255, 153, 0, 0.1); }
+    .cyber-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 153, 0, 0.4); color: #ff9900; }
+  </style>
+</head>
+<body class="p-6 min-h-screen flex flex-col justify-between">
+
+  <header class="cyber-box px-6 py-4 rounded-lg flex justify-between items-center mb-8">
+    <div>
+      <span class="text-xs text-orange-400 font-mono block">MODO GAME MASTER ACTIVO</span>
+      <h1 class="font-title text-xl text-orange-400 font-bold">SALA CÓDIGO: <span id="codigo-sala-txt" class="text-cyan-400">----</span></h1>
+    </div>
+    
+    <!-- CONTROLES DE TIEMPO Y CIERRE -->
+    <div class="flex items-center gap-4">
+      <div id="contenedor-timer" class="text-xs font-mono text-yellow-400 bg-yellow-950/40 border border-yellow-500/40 px-3 py-2 rounded hidden">
+        TIEMPO RESTANTE: <span id="tiempo-restante-txt" class="font-bold">--:--</span>
+      </div>
+      <button onclick="salirGM()" class="border border-orange-500/50 text-orange-400 px-4 py-2 text-xs font-title rounded hover:bg-orange-950/40 cursor-pointer">[ &lt; CERRAR SALA / HUB ]</button>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto w-full space-y-6 my-auto">
+    
+    <!-- CONFIGURACIÓN DE TIEMPO LÍMITE (SOLO PARA EL LOCAL/GM) -->
+    <div class="cyber-box p-4 rounded-lg flex items-center justify-between">
+      <div>
+        <h3 class="font-title text-xs text-orange-400 tracking-wider">// CONFIGURAR TIEMPO LÍMITE DE SESIÓN</h3>
+        <p class="text-[11px] text-gray-400 font-mono">El sistema avisará 5 minutos antes y cerrará la sala automáticamente al vencer.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <select id="select-minutos" class="cyber-input px-3 py-1.5 rounded text-xs font-mono">
+          <option value="10">10 Minutos (Prueba)</option>
+          <option value="30">30 Minutos</option>
+          <option value="60" selected>60 Minutos (1 Hora)</option>
+          <option value="120">120 Minutos (2 Horas)</option>
+        </select>
+        <button onclick="iniciarTemporizadorSala()" class="cyber-btn-alt px-4 py-1.5 text-xs rounded cursor-pointer">INICIAR TEMPORIZADOR</button>
+      </div>
+    </div>
+
+    <div class="cyber-box p-6 rounded-lg">
+      <h2 class="font-title text-sm text-orange-400 mb-4 tracking-wider">// JUGADORES CONECTADOS EN TIEMPO REAL</h2>
+      
+      <div id="contenedor-jugadores" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="text-gray-500 font-mono text-xs py-4">Esperando conexión de netrunners...</div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-gray-600 font-mono mt-8">
+    GM SURVEILLANCE PROTOCOL // CYBERPUNK RPG
+  </footer>
+
+  <script>
+    let salaId = localStorage.getItem('sala_gm_id');
+    let salaCodigo = localStorage.getItem('sala_gm_codigo');
+    let tiempoSegundosTotales = 0;
+    let timerInterval = null;
+    let aviso5MinEnviado = false;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!salaId || !salaCodigo) {
+        alert("No hay una sala activa.");
+        window.location.href = 'index.html';
+        return;
+      }
+      document.getElementById('codigo-sala-txt').textContent = salaCodigo;
+      consultarJugadores();
+      setInterval(consultarJugadores, 3000);
+    });
+
+    function iniciarTemporizadorSala() {
+      const minutos = parseInt(document.getElementById('select-minutos').value);
+      tiempoSegundosTotales = minutos * 60;
+      aviso5MinEnviado = false;
+
+      document.getElementById('contenedor-timer').classList.remove('hidden');
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        if (tiempoSegundosTotales > 0) {
+          tiempoSegundosTotales--;
+          
+          let mins = Math.floor(tiempoSegundosTotales / 60);
+          let secs = tiempoSegundosTotales % 60;
+          document.getElementById('tiempo-restante-txt').textContent = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+          // Alerta a los 5 minutos exactos (300 segundos)
+          if (tiempoSegundosTotales === 300 && !aviso5MinEnviado) {
+            aviso5MinEnviado = true;
+            enviarAlertaServidor("¡ATENCIÓN! La sala se cerrará automáticamente en 5 minutos.");
+          }
+
+          // Al llegar a 0, cerramos la sala
+          if (tiempoSegundosTotales === 0) {
+            clearInterval(timerInterval);
+            alert("El tiempo límite ha expirado. Cerrando sala de juego...");
+            salirGM();
+          }
+        }
+      }, 1000);
+
+      alert(`Temporizador iniciado por ${minutos} minutos.`);
+    }
+
+    async function enviarAlertaServidor(mensaje) {
+      try {
+        await fetch(`${window.location.origin}/api/salas/alerta`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sala_id: salaId, mensaje })
+        });
+      } catch(e) {}
+    }
+
+    async function consultarJugadores() {
+      try {
+        const res = await fetch(`${window.location.origin}/api/salas/${salaId}/jugadores`);
+        const data = await res.json();
+        const contenedor = document.getElementById('contenedor-jugadores');
+
+        if (data.status === 'success' && data.jugadores.length > 0) {
+          contenedor.innerHTML = data.jugadores.map(j => `
+            <div class="p-4 bg-black/60 border border-orange-500/30 rounded flex flex-col justify-between space-y-3">
+              <div>
+                <span class="text-[10px] text-gray-500 font-mono">JUGADOR: ${j.username.toUpperCase()}</span>
+                <div class="flex justify-between items-center">
+                  <h3 class="font-title text-cyan-400 text-sm font-bold">${j.alias}</h3>
+                  <span class="text-green-400 font-mono text-xs bg-green-950/60 px-2 py-0.5 rounded border border-green-500/30 font-bold">HP: ${j.hp_actual} / ${j.hp_max}</span>
+                </div>
+                <span class="text-xs text-orange-400 font-mono">CLASE: ${j.clase.toUpperCase()}</span>
+              </div>
+
+              <div class="flex gap-2 pt-2 border-t border-gray-800">
+                <button onclick="modificarHp(${j.id}, -5)" class="flex-1 bg-red-950/40 border border-red-500 text-red-400 py-1 text-xs font-mono rounded hover:bg-red-900/60 cursor-pointer">-5 HP</button>
+                <button onclick="modificarHp(${j.id}, -1)" class="flex-1 bg-red-950/20 border border-red-500/50 text-red-400 py-1 text-xs font-mono rounded hover:bg-red-900/40 cursor-pointer">-1 HP</button>
+                <button onclick="modificarHp(${j.id}, 1)" class="flex-1 bg-green-950/20 border border-green-500/50 text-green-400 py-1 text-xs font-mono rounded hover:bg-green-900/40 cursor-pointer">+1 HP</button>
+                <button onclick="modificarHp(${j.id}, 5)" class="flex-1 bg-green-950/40 border border-green-500 text-green-400 py-1 text-xs font-mono rounded hover:bg-green-900/60 cursor-pointer">+5 HP</button>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          contenedor.innerHTML = `<div class="text-gray-500 font-mono text-xs py-4">No hay jugadores conectados en este momento.</div>`;
+        }
+      } catch (err) {
+        console.error("Error al obtener jugadores", err);
+      }
+    }
+
+    async function modificarHp(personaje_id, cambio) {
+      try {
+        await fetch(`${window.location.origin}/api/personajes/actualizar-hp`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ personaje_id, cambio })
+        });
+        consultarJugadores();
+      } catch (err) {
+        console.error("Error al modificar HP", err);
+      }
+    }
+
+    async function salirGM() {
+      if (salaId) {
+        try {
+          await fetch(`${window.location.origin}/api/salas/cerrar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sala_id: salaId })
+          });
+        } catch(e) {}
+      }
+      localStorage.removeItem('sala_gm_id');
+      localStorage.removeItem('sala_gm_codigo');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

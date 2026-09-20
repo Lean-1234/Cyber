@@ -1,7 +1,12 @@
 CREATE DATABASE IF NOT EXISTS cyberpunk_rpg;
 USE cyberpunk_rpg;
 
-CREATE TABLE IF NOT EXISTS usuarios (
+DROP TABLE IF EXISTS jugadores_sala;
+DROP TABLE IF EXISTS salas;
+DROP TABLE IF EXISTS personajes;
+DROP TABLE IF EXISTS usuarios;
+
+CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -9,7 +14,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS personajes (
+CREATE TABLE personajes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     alias VARCHAR(50) NOT NULL,
@@ -31,7 +36,7 @@ CREATE TABLE IF NOT EXISTS personajes (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS salas (
+CREATE TABLE salas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(10) NOT NULL,
     gm_id INT NOT NULL,
@@ -40,14 +45,13 @@ CREATE TABLE IF NOT EXISTS salas (
     FOREIGN KEY (gm_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS jugadores_sala (
+CREATE TABLE jugadores_sala (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sala_id INT NOT NULL,
     usuario_id INT NOT NULL,
     personaje_id INT NOT NULL,
-    unido_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_jugador_sala (sala_id, usuario_id),
     FOREIGN KEY (sala_id) REFERENCES salas(id) ON DELETE CASCADE,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (personaje_id) REFERENCES personajes(id) ON DELETE CASCADE
+    FOREIGN KEY (personaje_id) REFERENCES personajes(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_room (sala_id, usuario_id)
 );

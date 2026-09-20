@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRÓNICAS MEDIEVALES - BIENVENIDA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      background-color: #120e0a; 
+      background-image: radial-gradient(circle at 50% 30%, #2a2015 0%, #120e0a 70%);
+      font-family: 'IM Fell English', serif; 
+      color: #e6dfd5; 
+      min-height: 100vh;
+    }
+    .font-title { font-family: 'Cinzel', serif; }
+    .medieval-box { 
+      background: rgba(22, 17, 12, 0.95); 
+      border: 2px solid #8c6d3f; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+    .medieval-btn { 
+      background: linear-gradient(to bottom, #5c4028, #3a2717); 
+      border: 1px solid #d4af37; 
+      color: #f3e5ab; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+      transition: all 0.2s; 
+    }
+    .medieval-btn:hover { 
+      background: linear-gradient(to bottom, #755235, #4a331f); 
+      border-color: #fff;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
+    }
+    .medieval-btn-alt { 
+      background: transparent; 
+      border: 1px solid #8c6d3f; 
+      color: #d4af37; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+    }
+    .medieval-btn-alt:hover { 
+      background: rgba(140, 109, 63, 0.2); 
+      border-color: #d4af37;
+    }
+  </style>
+</head>
+<body class="p-6 flex flex-col justify-between">
+
+  <!-- BARRA SUPERIOR CON BOTONES DE ACCESO -->
+  <header class="medieval-box px-6 py-4 rounded flex justify-between items-center mb-8">
+    <div>
+      <span class="text-xs text-[#a38a5e] font-title tracking-widest block">SANTUARIO DE ROL</span>
+      <span class="font-title text-[#d4af37] font-bold text-sm tracking-wide">CRÓNICAS MEDIEVALES</span>
+    </div>
+    <div class="flex gap-3 items-center">
+      <a href="login.html?modo=login" class="medieval-btn-alt px-4 py-2 text-xs rounded text-decoration-none">INICIAR SESIÓN</a>
+      <a href="login.html?modo=registro" class="medieval-btn px-4 py-2 text-xs rounded text-decoration-none">REGISTRARSE</a>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL DE PRESENTACIÓN -->
+  <main class="max-w-4xl mx-auto w-full space-y-6 my-auto text-center">
+    
+    <div class="medieval-box p-10 rounded space-y-6 shadow-2xl">
+      <h1 class="font-title text-3xl text-[#d4af37] tracking-wider">⚔️ BIENVENIDO A LAS CRÓNICAS DEL REINO ⚔️</h1>
+      
+      <p class="text-lg text-[#d1c7b7] leading-relaxed italic max-w-2xl mx-auto">
+        Un espacio dedicado a las leyendas de fantasía medieval. Forja múltiples fichas de tus héroes, únete a las cámaras de juego organizadas por el Maestro de Juego y sincroniza vuestra aventura en tiempo real.
+      </p>
+
+      <div class="pt-4 flex justify-center gap-4">
+        <a href="login.html?modo=login" class="medieval-btn px-6 py-3 rounded text-sm tracking-widest text-decoration-none">
+          COMENZAR AVENTURA
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-xs text-[#8c6d3f] font-title mt-8 tracking-widest">
+    CRÓNICAS DE ROL // REINO MEDIEVAL v1.0
+  </footer>
+
+</body>
+</html>

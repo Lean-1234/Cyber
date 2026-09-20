@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRÓNICAS MEDIEVALES - GESTIÓN DE HÉROES</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      background-color: #120e0a; 
+      background-image: radial-gradient(circle at 50% 30%, #2a2015 0%, #120e0a 70%);
+      font-family: 'IM Fell English', serif; 
+      color: #e6dfd5; 
+      min-height: 100vh;
+    }
+    .font-title { font-family: 'Cinzel', serif; }
+    .medieval-box { 
+      background: rgba(22, 17, 12, 0.95); 
+      border: 2px solid #8c6d3f; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+    .medieval-btn { 
+      background: linear-gradient(to bottom, #5c4028, #3a2717); 
+      border: 1px solid #d4af37; 
+      color: #f3e5ab; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+      transition: all 0.2s; 
+    }
+    .medieval-btn:hover { 
+      background: linear-gradient(to bottom, #755235, #4a331f); 
+      border-color: #fff;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
+    }
+    .medieval-btn-danger { 
+      background: linear-gradient(to bottom, #5c2828, #3a1717); 
+      border: 1px solid #ff4444; 
+      color: #ffcccc; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+      transition: all 0.2s; 
+    }
+    .medieval-btn-danger:hover { 
+      background: linear-gradient(to bottom, #753535, #4a1f1f); 
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.4); 
+    }
+  </style>
+</head>
+<body class="p-6 flex flex-col justify-between min-h-screen">
+
+  <!-- BARRA SUPERIOR -->
+  <header class="medieval-box px-6 py-4 rounded flex justify-between items-center mb-8">
+    <div>
+      <span class="text-xs text-[#a38a5e] font-title tracking-widest block">ANALECAS DEL REINO</span>
+      <h1 class="font-title text-xl text-[#d4af37] font-bold">REGISTRO DE HÉROES</h1>
+    </div>
+    <a href="dashboard.html" class="border border-[#8c6d3f] text-[#d4af37] px-4 py-2 text-xs font-title rounded hover:bg-[#2a2015] text-decoration-none cursor-pointer">
+      &lt; VOLVER AL PANEL
+    </a>
+  </header>
+
+  <!-- CONTENIDO CENTRAL -->
+  <main class="max-w-4xl mx-auto w-full space-y-6 my-auto">
+    
+    <div class="medieval-box p-8 rounded space-y-6 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-[#8c6d3f]/40 pb-3">
+        <h2 class="font-title text-lg text-[#d4af37] tracking-wider">📜 TUS PERSONAJES REGISTRADOS</h2>
+        <a href="crear-personaje.html" class="medieval-btn px-4 py-2 text-xs rounded text-decoration-none">
+          + FORJAR NUEVO HÉROE
+        </a>
+      </div>
+      
+      <p class="text-xs text-[#b8a78a] font-title tracking-wide">
+        Aquí yacen las fichas de todos los aventureros vinculados a tu cuenta. Puedes examinar sus atributos o retirar sus almas del reino si ya no los necesitas.
+      </p>
+
+      <!-- CONTENEDOR DE LA LISTA DE PERSONAJES -->
+      <div id="contenedor-personajes" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="text-[#b8a78a] italic font-title text-xs text-center py-6 col-span-2">Cargando los anales del reino...</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-xs text-[#8c6d3f] font-title mt-8 tracking-widest">
+    REGISTRO DE HÉROES // REINO MEDIEVAL v1.0
+  </footer>
+
+  <script>
+    let usuarioActual = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      let stored = localStorage.getItem('usuario');
+      if (!stored) {
+        window.location.href = 'login.html';
+        return;
+      }
+      try {
+        usuarioActual = JSON.parse(stored);
+        cargarPersonajes();
+      } catch (e) {
+        localStorage.clear();
+        window.location.href = 'login.html';
+      }
+    });
+
+    async function cargarPersonajes() {
+      try {
+        const res = await fetch(`${window.location.origin}/api/personajes/${usuarioActual.id}`);
+        const data = await res.json();
+        const contenedor = document.getElementById('contenedor-personajes');
+
+        if (data.status === 'success' && data.personajes.length > 0) {
+          contenedor.innerHTML = data.personajes.map(p => `
+            <div class="p-4 bg-[#120e0a]/90 border border-[#8c6d3f]/50 rounded flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex justify-between items-center border-b border-[#8c6d3f]/30 pb-2 mb-2">
+                  <span class="font-title text-[#d4af37] font-bold text-sm">${p.alias}</span>
+                  <span class="text-green-400 bg-green-950/60 px-2 py-0.5 rounded border border-green-500/30 font-bold text-[11px]">HP: ${p.hp_actual} / ${p.hp_max}</span>
+                </div>
+                <div class="space-y-1 text-xs font-mono text-[#d1c7b7]">
+                  <p>CLASE / ROL: <strong class="text-white">${p.clase}</strong></p>
+                  <p>ORIGEN: <strong class="text-gray-300">${p.origen || 'Desconocido'}</strong></p>
+                </div>
+              </div>
+
+              <button onclick="eliminarPersonaje(${p.id}, '${p.alias}')" class="medieval-btn-danger w-full py-2 text-xs rounded tracking-widest cursor-pointer">
+                ELIMINAR HÉROE
+              </button>
+            </div>
+          `).join('');
+        } else {
+          contenedor.innerHTML = `
+            <div class="text-center py-10 col-span-2 space-y-4">
+              <p class="text-[#b8a78a] font-title text-sm italic">Aún no has forjado ningún héroe en los anales del reino.</p>
+              <a href="crear-personaje.html" class="medieval-btn px-6 py-2.5 rounded text-xs inline-block text-decoration-none">FORJAR TU PRIMER HÉROE</a>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error("Error al cargar personajes", err);
+      }
+    }
+
+    async function eliminarPersonaje(id, alias) {
+      if (!confirm(`¿Estás seguro de que deseas retirar del reino al héroe "${alias}"? Esta acción no se puede deshacer.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`${window.location.origin}/api/personajes/eliminar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ personaje_id: id, usuario_id: usuarioActual.id })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("El héroe ha sido eliminado correctamente.");
+          cargarPersonajes();
+        } else {
+          alert(data.message || "Error al eliminar el personaje.");
+        }
+      } catch (err) {
+        alert("Error de conexión con el servidor central.");
+      }
+    }
+  </script>
+</body>
+</html>

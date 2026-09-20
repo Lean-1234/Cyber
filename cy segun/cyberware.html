@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERPUNK RPG - CYBERWARE MATRIX</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:ital,wght@0,500;0,700;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cyber-cyan: #00f3ff;
+      --cyber-yellow: #fcee0a;
+      --cyber-orange: #ff9900;
+      --cyber-bg: #030407;
+      --slot-bg: rgba(10, 16, 28, 0.9);
+    }
+
+    body {
+      background-color: var(--cyber-bg);
+      font-family: 'Rajdhani', sans-serif;
+      color: #e2e8f0;
+      background-image: 
+        radial-gradient(circle at 50% 45%, rgba(0, 243, 255, 0.05) 0%, transparent 65%),
+        linear-gradient(rgba(0,0,0,0.95), rgba(0,0,0,0.95));
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .font-title { font-family: 'Orbitron', sans-serif; }
+    .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+
+    /* Estilo de ranuras cibernéticas */
+    .cyber-slot {
+      background: var(--slot-bg);
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      width: 50px;
+      height: 50px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 0 100%);
+    }
+
+    .cyber-slot:hover {
+      border-color: var(--cyber-yellow);
+      box-shadow: 0 0 12px rgba(252, 238, 10, 0.5);
+      cursor: pointer;
+    }
+
+    .cyber-slot::after {
+      content: '+';
+      color: var(--cyber-cyan);
+      font-size: 16px;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .slot-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slot-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--cyber-orange);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slot-label::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background-color: var(--cyber-orange);
+      box-shadow: 0 0 6px var(--cyber-orange);
+    }
+
+    .glow-cyan { text-shadow: 0 0 10px var(--cyber-cyan); }
+    
+    .top-bar-stats {
+      background: rgba(10, 14, 22, 0.95);
+      border-bottom: 2px solid var(--cyber-yellow);
+    }
+  </style>
+</head>
+<body class="flex flex-col justify-between min-h-screen p-4">
+
+  <!-- BARRA SUPERIOR ESTILO HUD (Limpiada de Trade/Character y con dinero en 0) -->
+  <header class="top-bar-stats px-6 py-3 flex justify-between items-center text-xs font-mono-tech">
+    <div class="flex items-center space-x-6">
+      <span class="text-yellow-400 font-bold text-sm">50 <span class="text-gray-400 font-normal">LEVEL</span></span>
+      <span class="text-yellow-400 font-bold text-sm">50 <span class="text-gray-400 font-normal">STREET CRED</span></span>
+    </div>
+    
+    <div class="flex font-title text-sm">
+      <span class="text-cyan-400 border-b-2 border-cyan-400 pb-1 glow-cyan">[ CYBERWARE ]</span>
+    </div>
+
+    <div class="flex items-center space-x-4 text-yellow-400 font-bold text-sm">
+      <span>€$ 0</span>
+      <a href="index.html" class="text-xs text-gray-400 hover:text-cyan-400 border border-cyan-500/30 px-3 py-1 ml-4">[ &lt; VOLVER AL HUB ]</a>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL: INTERFAZ DE CYBERWARE -->
+  <main class="relative max-w-6xl mx-auto w-full my-auto grid grid-cols-1 md:grid-cols-3 items-center gap-8 py-4">
+    
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="space-y-6 flex flex-col items-end">
+      
+      <!-- Frontal Cortex (2 ranuras) -->
+      <div class="slot-group items-end">
+        <div class="slot-label">Frontal Cortex</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+      <!-- Arms (1 ranura) -->
+      <div class="slot-group items-end">
+        <div class="slot-label">Arms</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+      <!-- Integumentary System (2 ranuras) -->
+      <div class="slot-group items-end">
+        <div class="slot-label">Integumentary System</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMNA CENTRAL: Silueta Simple y Geométrica -->
+    <div class="flex flex-col items-center justify-center relative">
+      <div class="absolute w-48 h-[400px] bg-cyan-500/5 blur-3xl rounded-full pointer-events-none"></div>
+      
+      <div class="relative flex flex-col items-center justify-center h-[420px] w-64">
+        <!-- SVG simple y esquemático -->
+        <svg class="w-40 h-72 text-cyan-400 opacity-90 filter drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]" viewBox="0 0 100 180" fill="none" stroke="currentColor" stroke-width="2">
+          <!-- Cabeza -->
+          <circle cx="50" cy="25" r="18"/>
+          <!-- Cuerpo -->
+          <rect x="30" y="50" width="40" height="90" rx="4"/>
+        </svg>
+        
+        <div class="absolute bottom-2 font-mono-tech text-[11px] tracking-widest text-cyan-400 glow-cyan font-bold">
+          // BIOMETRIC_SCAN_ACTIVE
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="space-y-6 flex flex-col items-start">
+      
+      <!-- Operating System (2 ranuras) -->
+      <div class="slot-group items-start">
+        <div class="slot-label">Operating System</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+      <!-- Face (1 ranura) -->
+      <div class="slot-group items-start">
+        <div class="slot-label">Face</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+      <!-- Circulatory System (3 ranuras) -->
+      <div class="slot-group items-start">
+        <div class="slot-label">Circulatory System</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+      <!-- Legs (2 ranuras) -->
+      <div class="slot-group items-start">
+        <div class="slot-label">Legs</div>
+        <div class="flex gap-2">
+          <div class="cyber-slot"></div>
+          <div class="cyber-slot"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="text-center font-mono-tech text-xs text-gray-500 py-3 border-t border-cyan-500/10">
+    CYBERWARE MANAGEMENT MATRIX // NETRUNNER PROTOCOL v2.4
+  </footer>
+
+</body>
+</html>

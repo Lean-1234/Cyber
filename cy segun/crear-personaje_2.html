@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPG - FORJA DE PERSONAJE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* ESTILOS MEDIEVALES (POR DEFECTO) */
+    body.tema-medieval { 
+      background-color: #120e0a; 
+      background-image: radial-gradient(circle at 50% 30%, #2a2015 0%, #120e0a 70%);
+      font-family: 'IM Fell English', serif; 
+      color: #e6dfd5; 
+    }
+    .tema-medieval .font-titulo-dinamico { font-family: 'Cinzel', serif; }
+    .tema-medieval .caja-dinamica { 
+      background: rgba(22, 17, 12, 0.95); 
+      border: 2px solid #8c6d3f; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+    .tema-medieval .input-dinamico { 
+      background: rgba(12, 9, 6, 0.9); 
+      border: 1px solid #8c6d3f; 
+      color: #d4af37; 
+      font-family: 'IM Fell English', serif;
+    }
+    .tema-medieval .input-dinamico:focus { 
+      border-color: #d4af37; 
+      outline: none; 
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.05);
+    }
+    .tema-medieval .btn-dinamico { 
+      background: linear-gradient(to bottom, #5c4028, #3a2717); 
+      border: 1px solid #d4af37; 
+      color: #f3e5ab; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+    }
+    .tema-medieval .btn-dinamico:hover { 
+      background: linear-gradient(to bottom, #755235, #4a331f); 
+      border-color: #fff;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
+    }
+    .tema-medieval .texto-secundario { color: #a38a5e; }
+    .tema-medieval .bloque-atrib { background: rgba(18, 14, 10, 0.8); border: 1px solid rgba(140, 109, 63, 0.3); }
+
+    /* ESTILOS CYBERPUNK */
+    body.tema-cyberpunk { 
+      background-color: #050508; 
+      font-family: 'Rajdhani', sans-serif; 
+      color: #e2e8f0; 
+    }
+    .tema-cyberpunk .font-titulo-dinamico { font-family: 'Orbitron', sans-serif; }
+    .tema-cyberpunk .caja-dinamica { 
+      background: rgba(10, 15, 25, 0.9); 
+      border: 1px solid rgba(0, 243, 255, 0.3); 
+    }
+    .tema-cyberpunk .input-dinamico { 
+      background: rgba(0, 0, 0, 0.6); 
+      border: 1px solid rgba(0, 243, 255, 0.4); 
+      color: #00f3ff; 
+      font-family: 'Rajdhani', sans-serif;
+    }
+    .tema-cyberpunk .input-dinamico:focus { 
+      border-color: #fcee0a; 
+      outline: none; 
+      box-shadow: 0 0 10px rgba(252, 238, 10, 0.3);
+    }
+    .tema-cyberpunk .btn-dinamico { 
+      background: #00f3ff; 
+      color: #000; 
+      font-family: 'Orbitron', sans-serif; 
+      font-weight: 700; 
+    }
+    .tema-cyberpunk .btn-dinamico:hover { 
+      background: #fcee0a; 
+      box-shadow: 0 0 15px rgba(252, 238, 10, 0.5); 
+    }
+    .tema-cyberpunk .texto-secundario { color: #00f3ff; }
+    .tema-cyberpunk .bloque-atrib { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 153, 0, 0.2); }
+  </style>
+</head>
+<body class="p-6 flex flex-col justify-between min-h-screen tema-medieval" id="body-estilo">
+
+  <!-- BARRA SUPERIOR -->
+  <header class="caja-dinamica px-6 py-4 rounded flex justify-between items-center mb-6">
+    <div>
+      <span class="text-xs texto-secundario font-titulo-dinamico tracking-widest block">SISTEMA DE FORJA</span>
+      <h1 class="font-titulo-dinamico text-xl font-bold">REGISTRO DE PERSONAJE</h1>
+    </div>
+    <a href="dashboard.html" class="border px-4 py-2 text-xs font-titulo-dinamico rounded text-decoration-none cursor-pointer" style="border-color: inherit;">
+      &lt; VOLVER AL PANEL
+    </a>
+  </header>
+
+  <!-- CONTENIDO CENTRAL -->
+  <main class="max-w-4xl mx-auto w-full caja-dinamica p-8 rounded space-y-6 shadow-2xl">
+    
+    <!-- CABECERA CON EL BOTÓN SELECTOR DE ESTILO -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-3 gap-4" style="border-color: rgba(140, 109, 63, 0.4);">
+      <h2 class="font-titulo-dinamico text-lg font-bold">// INSCRIPCIÓN DE IDENTIDAD HEROICA</h2>
+      
+      <!-- BOTÓN PARA CAMBIAR EL ESTILO DE JUEGO -->
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-titulo-dinamico texto-secundario">ESTILO DE JUEGO:</span>
+        <button type="button" onclick="alternarEstilo()" id="btn-cambiar-estilo" class="btn-dinamico px-3 py-1.5 rounded text-xs tracking-wider cursor-pointer">
+          📜 MEDIEVAL
+        </button>
+      </div>
+    </div>
+    
+    <form id="form-crear-personaje" onsubmit="registrarPersonaje(event)" class="space-y-6">
+      
+      <!-- DATOS BÁSICOS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-xs font-titulo-dinamico texto-secundario mb-1">NOMBRE O ALIAS</label>
+          <input type="text" id="alias" required class="input-dinamico w-full p-3 rounded text-sm" placeholder="Ej: Draco el Valiente">
+        </div>
+        <div>
+          <label class="block text-xs font-titulo-dinamico texto-secundario mb-1">CLASE / ROL</label>
+          <select id="clase" class="input-dinamico w-full p-3 rounded text-sm font-mono">
+            <!-- Dinámico -->
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-titulo-dinamico texto-secundario mb-1">ORIGEN / TRASFONDO</label>
+          <input type="text" id="origen" class="input-dinamico w-full p-3 rounded text-sm" placeholder="Ej: Tierras del Norte">
+        </div>
+      </div>
+
+      <!-- ATRIBUTOS Y ESTADÍSTICAS -->
+      <div>
+        <h3 class="font-titulo-dinamico text-sm mb-3 tracking-wider" style="color: #ff9900;">// ATRIBUTOS PRINCIPALES (1 - 20)</h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 bloque-atrib p-4 rounded text-xs">
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">INTELIGENCIA</label>
+            <input type="number" id="inteligencia" value="11" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">REFLEJOS</label>
+            <input type="number" id="reflejos" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">DESTREZA</label>
+            <input type="number" id="destreza" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">TÉCNICA</label>
+            <input type="number" id="tecnica" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">CARISMA</label>
+            <input type="number" id="cool" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">ATRACTIVO</label>
+            <input type="number" id="atractivo" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">SUERTE</label>
+            <input type="number" id="suerte" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">MOVIMIENTO</label>
+            <input type="number" id="movimiento" value="9" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">CUERPO</label>
+            <input type="number" id="cuerpo" value="15" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+          <div>
+            <label class="block texto-secundario mb-1 font-titulo-dinamico">EMPATA</label>
+            <input type="number" id="empatia" value="10" min="1" max="20" class="input-dinamico w-full p-2 rounded text-center">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-dinamico w-full py-3 rounded text-sm tracking-widest mt-4 cursor-pointer">
+        REGISTRAR Y GUARDAR PERSONAJE
+      </button>
+    </form>
+  </main>
+
+  <footer class="text-center text-xs texto-secundario font-titulo-dinamico mt-8 tracking-widest">
+    FORJA DE HÉROES Y OPERARIOS // PROTOCOLO MULTIESTILO
+  </footer>
+
+  <script>
+    let usuarioActual = null;
+
+    const clasesMedievales = ["Paladín", "Guerrero", "Mago", "Clérigo", "Pícaro"];
+    const clasesCyberpunk = ["Cromopesado", "Agente Corporativo", "Icon-net", "Semimatazanos", "Netrunner"];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const stored = localStorage.getItem('usuario');
+      if (!stored) {
+        window.location.href = 'login.html';
+        return;
+      }
+      usuarioActual = JSON.parse(stored);
+
+      const estiloGuardado = localStorage.getItem('estilo_juego') || 'medieval';
+      aplicarTema(estiloGuardado);
+    });
+
+    function alternarEstilo() {
+      const body = document.getElementById('body-estilo');
+      const actual = body.classList.contains('tema-cyberpunk') ? 'cyberpunk' : 'medieval';
+      const nuevo = actual === 'medieval' ? 'cyberpunk' : 'medieval';
+      
+      aplicarTema(nuevo);
+      localStorage.setItem('estilo_juego', nuevo);
+    }
+
+    function aplicarTema(tema) {
+      const body = document.getElementById('body-estilo');
+      const btn = document.getElementById('btn-cambiar-estilo');
+      const selectClase = document.getElementById('clase');
+      const inputAlias = document.getElementById('alias');
+      const inputOrigen = document.getElementById('origen');
+
+      selectClase.innerHTML = '';
+
+      if (tema === 'cyberpunk') {
+        body.classList.remove('tema-medieval');
+        body.classList.add('tema-cyberpunk');
+        btn.textContent = "⚡ CYBERPUNK";
+        
+        inputAlias.placeholder = "Ej: V-47 Cyberrunner";
+        inputOrigen.placeholder = "Ej: Neo-Tokyo";
+
+        clasesCyberpunk.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          selectClase.appendChild(opt);
+        });
+      } else {
+        body.classList.remove('tema-cyberpunk');
+        body.classList.add('tema-medieval');
+        btn.textContent = "📜 MEDIEVAL";
+        
+        inputAlias.placeholder = "Ej: Draco el Valiente";
+        inputOrigen.placeholder = "Ej: Tierras del Norte";
+
+        clasesMedievales.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c;
+          opt.textContent = c;
+          selectClase.appendChild(opt);
+        });
+      }
+    }
+
+    async function registrarPersonaje(e) {
+      e.preventDefault();
+      
+      const payload = {
+        usuario_id: usuarioActual.id,
+        alias: document.getElementById('alias').value.trim(),
+        clase: document.getElementById('clase').value,
+        origen: document.getElementById('origen').value.trim() || 'Desconocido',
+        inteligencia: parseInt(document.getElementById('inteligencia').value),
+        reflejos: parseInt(document.getElementById('reflejos').value),
+        destreza: parseInt(document.getElementById('destreza').value),
+        tecnica: parseInt(document.getElementById('tecnica').value),
+        cool: parseInt(document.getElementById('cool').value),
+        atractivo: parseInt(document.getElementById('atractivo').value),
+        suerte: parseInt(document.getElementById('suerte').value),
+        movimiento: parseInt(document.getElementById('movimiento').value),
+        cuerpo: parseInt(document.getElementById('cuerpo').value),
+        empatia: parseInt(document.getElementById('empatia').value),
+        hp_max: 35,
+        hp_actual: 35
+      };
+
+      try {
+        const res = await fetch(`${window.location.origin}/api/personajes/crear`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("¡Personaje creado y guardado con éxito!");
+          window.location.href = 'personajes.html';
+        } else {
+          alert(data.message || "Error al crear personaje.");
+        }
+      } catch (err) {
+        alert("Error de conexión con el servidor central.");
+      }
+    }
+  </script>
+</body>
+</html>

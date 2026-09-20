@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRÓNICAS MEDIEVALES - ACCESO AL REINO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      background-color: #120e0a; 
+      background-image: radial-gradient(circle at 50% 30%, #2a2015 0%, #120e0a 70%);
+      font-family: 'IM Fell English', serif; 
+      color: #e6dfd5; 
+      min-height: 100vh;
+    }
+    .font-title { font-family: 'Cinzel', serif; }
+    .medieval-box { 
+      background: rgba(22, 17, 12, 0.95); 
+      border: 2px solid #8c6d3f; 
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+    .medieval-input { 
+      background: rgba(12, 9, 6, 0.9); 
+      border: 1px solid #8c6d3f; 
+      color: #d4af37; 
+      font-family: 'IM Fell English', serif;
+      transition: all 0.2s ease-in-out;
+    }
+    .medieval-input:focus { 
+      border-color: #d4af37; 
+      outline: none; 
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+      background: rgba(212, 175, 55, 0.05);
+    }
+    .medieval-btn { 
+      background: linear-gradient(to bottom, #5c4028, #3a2717); 
+      border: 1px solid #d4af37; 
+      color: #f3e5ab; 
+      font-family: 'Cinzel', serif; 
+      font-weight: 700; 
+      transition: all 0.2s; 
+    }
+    .medieval-btn:hover { 
+      background: linear-gradient(to bottom, #755235, #4a331f); 
+      border-color: #fff;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 relative">
+
+  <!-- BOTÓN PARA VOLVER A LA PRESENTACIÓN -->
+  <div class="absolute top-6 left-6">
+    <a href="index.html" class="font-title text-xs text-[#d4af37] border border-[#8c6d3f] px-3 py-2 rounded hover:bg-[#2a2015] text-decoration-none cursor-pointer">
+      &lt; VOLVER AL INICIO
+    </a>
+  </div>
+
+  <div class="medieval-box p-8 rounded max-w-md w-full relative mt-12 md:mt-0">
+    <div class="text-center mb-6">
+      <span class="text-xs text-[#a38a5e] font-title tracking-widest block mb-1">PORTAL DE ENTRADA</span>
+      <h1 class="font-title text-2xl text-[#d4af37] tracking-wider">📜 ACCESO AL SANTUARIO</h1>
+      <p class="text-xs text-[#b8a78a] font-title tracking-wide mt-1">Identifícate para cruzar las puertas del reino</p>
+    </div>
+
+    <!-- PESTAÑAS DE NAVEGACIÓN -->
+    <div class="flex mb-6 border-b border-[#8c6d3f]/40">
+      <button id="tab-login" onclick="cambiarTab('login')" class="flex-1 pb-2 font-title text-sm text-[#d4af37] border-b-2 border-[#d4af37] cursor-pointer">INICIAR SESIÓN</button>
+      <button id="tab-registro" onclick="cambiarTab('registro')" class="flex-1 pb-2 font-title text-sm text-[#8c6d3f] hover:text-[#d4af37] cursor-pointer">REGISTRO</button>
+    </div>
+
+    <div id="mensaje-alerta" class="hidden p-3 mb-4 text-xs font-title rounded border"></div>
+
+    <!-- FORMULARIO LOGIN -->
+    <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-title text-[#a38a5e] mb-1">USUARIO O CORREO</label>
+        <input type="text" id="login-user" required class="medieval-input w-full p-3 rounded text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-title text-[#a38a5e] mb-1">CONTRASEÑA</label>
+        <input type="password" id="login-pass" required class="medieval-input w-full p-3 rounded text-sm">
+      </div>
+      <button type="submit" class="medieval-btn w-full py-3 rounded text-sm tracking-widest mt-2 cursor-pointer">ATRAVESAR EL UMBRAL</button>
+    </form>
+
+    <!-- FORMULARIO REGISTRO -->
+    <form id="form-registro" onsubmit="handleRegistro(event)" class="space-y-4 hidden">
+      <div>
+        <label class="block text-xs font-title text-[#a38a5e] mb-1">NOMBRE DE VIAJERO</label>
+        <input type="text" id="reg-user" required class="medieval-input w-full p-3 rounded text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-title text-[#a38a5e] mb-1">CORREO ELECTRÓNICO</label>
+        <input type="email" id="reg-email" required class="medieval-input w-full p-3 rounded text-sm">
+      </div>
+      <div>
+        <label class="block text-xs font-title text-[#a38a5e] mb-1">CONTRASEÑA</label>
+        <input type="password" id="reg-pass" required class="medieval-input w-full p-3 rounded text-sm">
+      </div>
+      <button type="submit" class="medieval-btn w-full py-3 rounded text-sm tracking-widest mt-2 cursor-pointer">REGISTRAR NUEVA ALMA</button>
+    </form>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const modo = urlParams.get('modo');
+      if (modo === 'registro') {
+        cambiarTab('registro');
+      }
+    });
+
+    function cambiarTab(tipo) {
+      const fLogin = document.getElementById('form-login');
+      const fReg = document.getElementById('form-registro');
+      const tLogin = document.getElementById('tab-login');
+      const tReg = document.getElementById('tab-registro');
+      document.getElementById('mensaje-alerta').classList.add('hidden');
+
+      if (tipo === 'login') {
+        fLogin.classList.remove('hidden');
+        fReg.classList.add('hidden');
+        tLogin.className = "flex-1 pb-2 font-title text-sm text-[#d4af37] border-b-2 border-[#d4af37] cursor-pointer";
+        tReg.className = "flex-1 pb-2 font-title text-sm text-[#8c6d3f] hover:text-[#d4af37] cursor-pointer";
+      } else {
+        fLogin.classList.add('hidden');
+        fReg.classList.remove('hidden');
+        tReg.className = "flex-1 pb-2 font-title text-sm text-[#d4af37] border-b-2 border-[#d4af37] cursor-pointer";
+        tLogin.className = "flex-1 pb-2 font-title text-sm text-[#8c6d3f] hover:text-[#d4af37] cursor-pointer";
+      }
+    }
+
+    function mostrarAlerta(texto, esError = true) {
+      const alerta = document.getElementById('mensaje-alerta');
+      alerta.textContent = texto;
+      alerta.className = `p-3 mb-4 text-xs font-title rounded border ${esError ? 'bg-red-950/80 border-red-800 text-red-300' : 'bg-[#2a2015] border-[#8c6d3f] text-[#d4af37]'}`;
+      alerta.classList.remove('hidden');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username_or_email = document.getElementById('login-user').value.trim();
+      const password = document.getElementById('login-pass').value;
+
+      try {
+        const res = await fetch(`${window.location.origin}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username_or_email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          localStorage.setItem('usuario', JSON.stringify(data.usuario));
+          // Redirige al panel interno del usuario (dashboard.html)
+          window.location.href = 'dashboard.html';
+        } else {
+          mostrarAlerta(data.message || "Credenciales incorrectas.");
+        }
+      } catch (err) {
+        mostrarAlerta("Error de conexión con los anales del reino.");
+      }
+    }
+
+    async function handleRegistro(e) {
+      e.preventDefault();
+      const username = document.getElementById('reg-user').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-pass').value;
+
+      try {
+        const res = await fetch(`${window.location.origin}/api/auth/registro`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          mostrarAlerta("¡Registro exitoso! Ya puedes iniciar sesión.", false);
+          cambiarTab('login');
+        } else {
+          mostrarAlerta(data.message || "Error al registrar.");
+        }
+      } catch (err) {
+        mostrarAlerta("Error de conexión con los anales del reino.");
+      }
+    }
+  </script>
+</body>
+</html>
